@@ -1,29 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using UnityEngine.Scripting.APIUpdating;
 
 public class Player : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private CinemachineVirtualCamera vcam;
-    [SerializeField] private Camera cam;
 
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 10f;
 
+    private bool isRunning;
     private Vector3 moveDirection;
     private bool jumpTrigger;
+
+    [Header("Ground Raycast")]
+    private bool isGrounded;
+    [SerializeField] private float rayOffset;
+    [SerializeField] private float rayDistance;
+    [SerializeField] private LayerMask groundLayer;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         float x = Input.GetAxis("Horizontal");
@@ -36,29 +37,39 @@ public class Player : MonoBehaviour
             jumpTrigger = true;
         }
 
-        ControlCamera();
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            isRunning = true;
+        }
+        else
+        {
+            isRunning = false;
+        }
+
+        isGrounded = GroundCheck();
     }
 
     void FixedUpdate()
     {
-        if (jumpTrigger)
+        if (jumpTrigger && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             jumpTrigger = false;
         }
 
-        rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
+        float s = isRunning ? speed * 2 : speed;
+
+        rb.MovePosition(rb.position + moveDirection * s * Time.fixedDeltaTime);
     }
 
-    void ControlCamera()
+    bool GroundCheck()
     {
-        //rotate camera when mouse drag
-        if (Input.GetMouseButton(1))
-        {
-            float x = Input.GetAxis("Mouse X");
-            float y = Input.GetAxis("Mouse Y");
+        return Physics.Raycast(transform.position + Vector3.up * rayOffset, Vector3.down, rayDistance, groundLayer);
+    }
 
-            cam.transform.Rotate(Vector3.right * -y);
-        }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position + Vector3.up * rayOffset, Vector3.down * rayDistance);
     }
 } 

@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Fro.sln"
+    "dotnet.defaultSolution": "fro.sln"
 }
