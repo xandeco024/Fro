@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position + Vector3.up * rayOffset, Vector3.down * rayDistance);
     }
 } 
