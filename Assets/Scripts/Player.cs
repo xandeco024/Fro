@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Components")]
+    InputActions inputActions;
     [SerializeField] private Rigidbody rb;
 
     [SerializeField] private float speed = 5f;
@@ -14,11 +15,28 @@ public class Player : MonoBehaviour
     private Vector3 moveDirection;
     private bool jumpTrigger;
 
+
     [Header("Ground Raycast")]
     private bool isGrounded;
     [SerializeField] private float rayOffset;
     [SerializeField] private float rayDistance;
     [SerializeField] private LayerMask groundLayer;
+
+    void OnEnable()
+    {
+        if (inputActions == null)
+        {
+            inputActions = new InputActions();
+            inputActions.Player.Movement.performed += ctx => moveDirection = ctx.ReadValue<Vector2>();
+        }
+
+        inputActions.Enable();
+    }
+
+    void OnDisable()
+    {
+        inputActions.Disable();
+    }
 
     void Start()
     {
@@ -27,25 +45,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        moveDirection = transform.right * x + transform.forward * z;
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            jumpTrigger = true;
-        }
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            isRunning = true;
-        }
-        else
-        {
-            isRunning = false;
-        }
-
         isGrounded = GroundCheck();
     }
 
