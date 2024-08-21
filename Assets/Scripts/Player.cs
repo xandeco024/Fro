@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private Cinemachine.CinemachineFreeLook freeLookCamera;
+    [SerializeField] private Camera mainCamera;
+
     InputActions inputActions;
     private Rigidbody rb;
 
@@ -51,17 +54,18 @@ public class Player : MonoBehaviour
         isGrounded = GroundCheck();
 
         //rotate towards camera look direction when start moving
-        if (moveDirection.magnitude > 0)
+        if (moveDirection.y > 0)
         {
-            float angle = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg + freeLookCamera.transform.eulerAngles.y;
-            transform.rotation = Quaternion.Euler(0, angle, 0);
+            transform.rotation = Quaternion.Euler(0, mainCamera.transform.eulerAngles.y, 0);
         }
     }
 
     void FixedUpdate()
     {
         float s = isRunning ? speed * 2 : speed;
-        rb.velocity = new Vector3(moveDirection.x * s, rb.velocity.y, moveDirection.y * s);
+        //rb.velocity = new Vector3(moveDirection.x * s, rb.velocity.y, moveDirection.y * s);
+        //apply velocity relative to character rotation
+        rb.velocity = transform.TransformDirection(new Vector3(moveDirection.x * s, rb.velocity.y, moveDirection.y * s));
     }
 
     private void Jump()

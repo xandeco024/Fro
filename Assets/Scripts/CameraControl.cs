@@ -5,8 +5,6 @@ using UnityEngine;
 public class CameraControl : MonoBehaviour
 {
     //utiliza o standard inputsys, talvez quebre em breve.
-
-    private Vector2 lastAxisValue;
     
     [SerializeField] private Cinemachine.CinemachineFreeLook freeLookCamera;
 
@@ -22,17 +20,12 @@ public class CameraControl : MonoBehaviour
             freeLookCamera.m_XAxis.m_InputAxisName = "Mouse X";
             freeLookCamera.m_YAxis.m_InputAxisName = "Mouse Y";
         }
-        else if (freeLookCamera.m_XAxis.Value != lastAxisValue.x || freeLookCamera.m_YAxis.Value != lastAxisValue.y)
-        {
-            freeLookCamera.m_XAxis.m_InputAxisName = "";
-            freeLookCamera.m_YAxis.m_InputAxisName = "";
-            lastAxisValue = new Vector2(freeLookCamera.m_XAxis.Value, freeLookCamera.m_YAxis.Value);
-
-        }
         else
         {
             freeLookCamera.m_XAxis.m_InputAxisName = "";
             freeLookCamera.m_YAxis.m_InputAxisName = "";
+            freeLookCamera.m_XAxis.m_InputAxisValue = 0;
+            freeLookCamera.m_YAxis.m_InputAxisValue = 0;
         }
     }
 }
