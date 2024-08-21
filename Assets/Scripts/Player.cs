@@ -5,15 +5,15 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Components")]
+    [SerializeField] private Cinemachine.CinemachineFreeLook freeLookCamera;
     InputActions inputActions;
-    [SerializeField] private Rigidbody rb;
+    private Rigidbody rb;
 
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 10f;
 
     private bool isRunning;
-    private Vector3 moveDirection;
-    private bool jumpTrigger;
+    public Vector2 moveDirection;
 
 
     [Header("Ground Raycast")]
@@ -28,6 +28,9 @@ public class Player : MonoBehaviour
         {
             inputActions = new InputActions();
             inputActions.Player.Movement.performed += ctx => moveDirection = ctx.ReadValue<Vector2>();
+            inputActions.Player.Jump.performed += ctx => Jump();
+            inputActions.Player.Run.started += ctx => isRunning = true;
+            inputActions.Player.Run.canceled += ctx => isRunning = false;
         }
 
         inputActions.Enable();
@@ -46,19 +49,27 @@ public class Player : MonoBehaviour
     void Update()
     {
         isGrounded = GroundCheck();
+
+        //rotate towards camera look direction when start moving
+        if (moveDirection.magnitude > 0)
+        {
+            float angle = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg + freeLookCamera.transform.eulerAngles.y;
+            transform.rotation = Quaternion.Euler(0, angle, 0);
+        }
     }
 
     void FixedUpdate()
     {
-        if (jumpTrigger && isGrounded)
+        float s = isRunning ? speed * 2 : speed;
+        rb.velocity = new Vector3(moveDirection.x * s, rb.velocity.y, moveDirection.y * s);
+    }
+
+    private void Jump()
+    {
+        if (isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            jumpTrigger = false;
         }
-
-        float s = isRunning ? speed * 2 : speed;
-
-        rb.MovePosition(rb.position + moveDirection * s * Time.fixedDeltaTime);
     }
 
     bool GroundCheck()
