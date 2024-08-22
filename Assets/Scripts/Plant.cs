@@ -8,29 +8,19 @@ public class Plant : MonoBehaviour
     //L SYSTEM ALGORITHM TO GENERATE PROCEDURAL PLANTS
     //https://en.wikipedia.org/wiki/L-system
 
-    class Branch //represents a branch of the plant
-    {
-        public Vector3 start;
-        public Vector3 end;
-        public float angle;
-        public float length;
-        public float thickness;
 
-        public Branch(Vector3 start, Vector3 end, float angle, float length, float thickness)
-        {
-            this.start = start;
-            this.end = end;
-            this.angle = angle;
-            this.length = length;
-            this.thickness = thickness;
-        }
-    }
+    [SerializeField] GameObject branchPrefab;
+    private List<GameObject> branches = new List<GameObject>();
 
+    [Header("L sys Generation")]
     [SerializeField] private int age = 0; //represents the age of the plant (iterations)
+    [SerializeField] private string axiom = "F";
+    [SerializeField] private string rule = "F+F";
+    [SerializeField] private string currentString = "F";
 
     void Start()
     {
-        
+        GeneratePlant();
     }
 
     void Update()
@@ -38,14 +28,38 @@ public class Plant : MonoBehaviour
         
     }
 
-    void DrawBranch(Vector3 start, Vector3 end)
+    void GeneratePlant()
     {
-        //draw a line from start to end
-        Gizmos.DrawLine(start, end);
+        for (int i = 0; i < age; i++)
+        {
+            Vector3 branchEnd = Vector3.up * age / i;
+            DrawBranch(transform.position, branchEnd);
+        }
     }
 
-    void OnDrawGizmos()
+    void ApplyRule()
     {
-        //draw the plant
+        string newString = "";
+        for (int i = 0; i < currentString.Length; i++)
+        {
+            if (currentString[i] == 'F')
+            {
+                newString += rule;
+            }
+            else
+            {
+                newString += currentString[i];
+            }
+        }
+        currentString = newString;
+        age++;
+    }
+
+    void DrawBranch(Vector3 start, Vector3 end)
+    {
+        GameObject branch = Instantiate(branchPrefab, start, Quaternion.identity);
+        branch.transform.LookAt(end);
+        branch.transform.localScale = new Vector3(1, 1, Vector3.Distance(start, end));
+        branches.Add(branch);
     }
 }
