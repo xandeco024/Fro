@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -269,7 +269,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 30709707}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.062137395, y: -0.000000003718092, z: 2.3147986e-10, w: 0.9980676}
+  m_LocalRotation: {x: 0.062137395, y: 0.0000000031321632, z: -1.9500124e-10, w: 0.9980676}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -348,7 +348,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 190925788}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.04397277, y: -0.000000017672795, z: 7.7787427e-10, w: 0.99903274}
+  m_LocalRotation: {x: 0.04397277, y: 0.000000017718772, z: -7.7989787e-10, w: 0.99903274}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -427,7 +427,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 426331605}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.025841631, y: 0.00000001690841, z: -4.3708687e-10, w: 0.99966604}
+  m_LocalRotation: {x: 0.02584163, y: 0.000000017200632, z: -4.4464088e-10, w: 0.99966604}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -662,7 +662,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!114 &617064610
 MonoBehaviour:
@@ -1044,7 +1044,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.043972768, y: -0.000000035414587, z: 0.000000001558785, w: 0.99903274}
+  m_LocalRotation: {x: 0.043972768, y: 0.00000003543755, z: -0.0000000015597961, w: 0.99903274}
   m_LocalPosition: {x: 20, y: 33.516, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1270,6 +1270,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   freeLookCamera: {fileID: 1001337491}
+  minFov: 2
+  maxFov: 50
+  zoomSpeed: 2
 --- !u!1 &1172256658
 GameObject:
   m_ObjectHideFlags: 0

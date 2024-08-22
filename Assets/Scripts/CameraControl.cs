@@ -5,8 +5,8 @@ using UnityEngine;
 public class CameraControl : MonoBehaviour
 {
     //utiliza o standard inputsys, talvez quebre em breve.
-    
     [SerializeField] private Cinemachine.CinemachineFreeLook freeLookCamera;
+    [SerializeField] private float minFov, maxFov, zoomSpeed;
 
     void Start()
     {
@@ -27,5 +27,10 @@ public class CameraControl : MonoBehaviour
             freeLookCamera.m_XAxis.m_InputAxisValue = 0;
             freeLookCamera.m_YAxis.m_InputAxisValue = 0;
         }
+
+        float fov = freeLookCamera.m_Lens.FieldOfView;
+        fov -= Input.mouseScrollDelta.y * zoomSpeed;
+        fov = Mathf.Clamp(fov, minFov, maxFov);
+        freeLookCamera.m_Lens.FieldOfView = fov;
     }
 }
