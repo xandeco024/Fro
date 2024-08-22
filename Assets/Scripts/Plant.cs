@@ -9,6 +9,7 @@ public class Plant : MonoBehaviour
     //https://en.wikipedia.org/wiki/L-system
 
 
+
     [SerializeField] GameObject branchPrefab;
     private List<GameObject> branches = new List<GameObject>();
 
@@ -17,49 +18,63 @@ public class Plant : MonoBehaviour
     [SerializeField] private string axiom = "F";
     [SerializeField] private string rule = "F+F";
     [SerializeField] private string currentString = "F";
+    [SerializeField] private string finalString;
+    private Vector3 TurtlePos;
+    private Quaternion TurtleRot;
 
     void Start()
     {
-        GeneratePlant();
+        TurtlePos = transform.position;
+        TurtleRot = transform.rotation;
+
+        foreach (char c in finalString)
+        {
+            if (c == 'F')
+            {
+                Vector3 dest = TurtlePos + Vector3.up;
+                GenerateBranch(TurtlePos, dest);
+                TurtlePos = dest;
+                
+            }
+            else if (c == '+')
+            {
+                //rotate turtlerot to the right
+                //TurtleRot *= Quaternion.AngleAxis(45, Vector3.up);
+                Debug.Log("RODOU PRA DIREITA");
+            }
+            else if (c == '-')
+            {
+                //rotate turtlerot to the left
+                //TurtleRot *= Quaternion.AngleAxis(-45, Vector3.up);
+                Debug.Log("RODOU PRA ESQUERDA");
+            }
+        }
     }
 
     void Update()
     {
-        
+
     }
 
-    void GeneratePlant()
+    void GenerateBranch(Vector3 start, Vector3 end)
     {
-        for (int i = 0; i < age; i++)
-        {
-            Vector3 branchEnd = Vector3.up * age / i;
-            DrawBranch(transform.position, branchEnd);
-        }
-    }
-
-    void ApplyRule()
-    {
-        string newString = "";
-        for (int i = 0; i < currentString.Length; i++)
-        {
-            if (currentString[i] == 'F')
-            {
-                newString += rule;
-            }
-            else
-            {
-                newString += currentString[i];
-            }
-        }
-        currentString = newString;
-        age++;
-    }
-
-    void DrawBranch(Vector3 start, Vector3 end)
-    {
-        GameObject branch = Instantiate(branchPrefab, start, Quaternion.identity);
+        GameObject branch = Instantiate(branchPrefab, start, TurtleRot);
         branch.transform.LookAt(end);
-        branch.transform.localScale = new Vector3(1, 1, Vector3.Distance(start, end));
+        //branch.transform.localScale = new Vector3(1, 1, Vector3.Distance(start, end));
         branches.Add(branch);
+        branch.transform.parent = transform;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        if (TurtlePos != null)
+        {
+            Gizmos.DrawWireSphere(TurtlePos, 0.1f);
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(TurtlePos, Vector3.up / 2);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawRay(TurtlePos, Vector3.down / 2);
+        }
     }
 }
