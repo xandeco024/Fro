@@ -32,20 +32,19 @@ public class Plant : MonoBehaviour
             if (c == 'F')
             {
                 Vector3 dest = TurtlePos + Vector3.up;
-                GenerateBranch(TurtlePos, dest);
+                GenerateBranch(TurtlePos, dest, TurtleRot);
                 TurtlePos = dest;
-                
             }
             else if (c == '+')
             {
                 //rotate turtlerot to the right
-                //TurtleRot *= Quaternion.AngleAxis(45, Vector3.up);
+                TurtleRot *= Quaternion.AngleAxis(45, Vector3.up);
                 Debug.Log("RODOU PRA DIREITA");
             }
             else if (c == '-')
             {
                 //rotate turtlerot to the left
-                //TurtleRot *= Quaternion.AngleAxis(-45, Vector3.up);
+                TurtleRot *= Quaternion.AngleAxis(-45, Vector3.up);
                 Debug.Log("RODOU PRA ESQUERDA");
             }
         }
@@ -56,11 +55,9 @@ public class Plant : MonoBehaviour
 
     }
 
-    void GenerateBranch(Vector3 start, Vector3 end)
+    void GenerateBranch(Vector3 start, Vector3 end, Quaternion rot)
     {
-        GameObject branch = Instantiate(branchPrefab, start, TurtleRot);
-        branch.transform.LookAt(end);
-        //branch.transform.localScale = new Vector3(1, 1, Vector3.Distance(start, end));
+        GameObject branch = Instantiate(branchPrefab, start, rot);
         branches.Add(branch);
         branch.transform.parent = transform;
     }
@@ -72,9 +69,11 @@ public class Plant : MonoBehaviour
         {
             Gizmos.DrawWireSphere(TurtlePos, 0.1f);
             Gizmos.color = Color.red;
-            Gizmos.DrawRay(TurtlePos, Vector3.up / 2);
+            Vector3 dir = TurtleRot * Vector3.up;
+            Gizmos.DrawRay(TurtlePos, dir / 2);
             Gizmos.color = Color.blue;
-            Gizmos.DrawRay(TurtlePos, Vector3.down / 2);
+            dir = TurtleRot * Vector3.down;
+            Gizmos.DrawRay(TurtlePos, dir / 2);
         }
     }
 }
