@@ -11,7 +11,7 @@ public class Plant : MonoBehaviour
 
 
     [SerializeField] GameObject branchPrefab;
-    private List<GameObject> branches = new List<GameObject>();
+    public List<GameObject> branches = new List<GameObject>();
 
     [Header("L sys Generation")]
     [SerializeField] private int age = 0; //represents the age of the plant (iterations)
@@ -19,8 +19,13 @@ public class Plant : MonoBehaviour
     [SerializeField] private string rule = "F+F";
     [SerializeField] private string currentString = "F";
     [SerializeField] private string finalString;
+    [SerializeField] private float rotationAngle;
+    [SerializeField] private float randomsiness;
     private Vector3 TurtlePos;
     private Quaternion TurtleRot;
+    private Vector3 savePos;
+    private Quaternion saveRot;
+
 
     void Start()
     {
@@ -31,23 +36,61 @@ public class Plant : MonoBehaviour
         {
             if (c == 'F')
             {
-                Vector3 dest = TurtlePos + Vector3.up;
+                Vector3 dir = TurtleRot * Vector3.up;
+                Vector3 dest = TurtlePos + dir;
                 GenerateBranch(TurtlePos, dest, TurtleRot);
                 TurtlePos = dest;
             }
             else if (c == '+')
             {
                 //rotate turtlerot to the right
-                TurtleRot *= Quaternion.AngleAxis(45, Vector3.up);
+                if (randomsiness != 0)
+                {
+                    rotationAngle += Random.Range(-randomsiness, randomsiness);
+                    //generate random POSITIVE vector3 to rotate
+                    Vector3 randomRotation = new Vector3(Random.Range(0, 1), Random.Range(0, 1), Random.Range(0, 1));
+                    TurtleRot *= Quaternion.AngleAxis(rotationAngle, randomRotation);
+                }
+
+                else 
+                {
+                    TurtleRot *= Quaternion.AngleAxis(rotationAngle, Vector3.right);
+
+                }
+
                 Debug.Log("RODOU PRA DIREITA");
             }
             else if (c == '-')
             {
                 //rotate turtlerot to the left
-                TurtleRot *= Quaternion.AngleAxis(-45, Vector3.up);
+                if (randomsiness != 0)
+                {
+                    rotationAngle += Random.Range(-randomsiness, randomsiness);
+                    //generate random NEGATIVE vector3 to rotate
+                    Vector3 randomRotation = new Vector3(Random.Range(-1, 0), Random.Range(-1, 0), Random.Range(-1, 0));
+                    TurtleRot *= Quaternion.AngleAxis(rotationAngle, randomRotation);
+                }
+
+                else
+                {
+                    TurtleRot *= Quaternion.AngleAxis(-rotationAngle, Vector3.right);
+                }
+
                 Debug.Log("RODOU PRA ESQUERDA");
             }
+            else if (c == '[')
+            {
+                savePos = TurtlePos;
+                saveRot = TurtleRot;
+            }
+            else if (c == ']')
+            {
+                TurtlePos = savePos;
+                TurtleRot = saveRot;
+            }
         }
+
+        ChildfyBranches(branches);
     }
 
     void Update()
@@ -59,7 +102,14 @@ public class Plant : MonoBehaviour
     {
         GameObject branch = Instantiate(branchPrefab, start, rot);
         branches.Add(branch);
-        branch.transform.parent = transform;
+    }
+
+    void ChildfyBranches(List<GameObject> branches)
+    {
+        foreach (GameObject branch in branches)
+        {
+            branch.transform.parent = transform;
+        }
     }
 
     void OnDrawGizmos()
