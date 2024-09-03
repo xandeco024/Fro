@@ -8,17 +8,24 @@ public class Plant : MonoBehaviour
     //L SYSTEM ALGORITHM TO GENERATE PROCEDURAL PLANTS
     //https://en.wikipedia.org/wiki/L-system
 
-
+    //that script needs to do:
+    //generate a base plant
+    //grow that plant (iterations but also randomly)
+    //generate leaves
+    //generate flowers (but that's for later)
+    //generate fruits (but that's for later)
+    //all above, but we can go step by step
 
     [SerializeField] GameObject branchPrefab;
+    [SerializeField] GameObject leafyBranchPrefab;
+    [SerializeField] GameObject leafPrefab;
     public List<GameObject> branches = new List<GameObject>();
 
     [Header("L sys Generation")]
     [SerializeField] private int age = 0; //represents the age of the plant (iterations)
     [SerializeField] private string axiom = "F";
-    [SerializeField] private string rule = "F+F";
-    [SerializeField] private string currentString = "F";
-    [SerializeField] private string finalString;
+    [SerializeField] private string[] rules;
+    [SerializeField] private string currentString;
     [SerializeField] private float rotationAngle;
     [SerializeField] private float randomsiness;
     private Vector3 TurtlePos;
@@ -32,15 +39,50 @@ public class Plant : MonoBehaviour
         TurtlePos = transform.position;
         TurtleRot = transform.rotation;
 
-        foreach (char c in finalString)
+        GeneratePlant(axiom);
+        currentString = axiom;
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            if (c == 'F')
+            age++;
+            ReGeneratePlant(currentString);
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            currentString = ApplyRules(rules, currentString);
+        }
+    }
+
+    void GeneratePlant(string banana)
+    {
+        foreach (char c in banana)
+        {
+            if (c == 'B')
             {
+                //generate branch
+
                 Vector3 dir = TurtleRot * Vector3.up;
                 Vector3 dest = TurtlePos + dir;
-                GenerateBranch(TurtlePos, dest, TurtleRot);
+                GenerateBranch(branchPrefab, TurtlePos, dest, TurtleRot);
                 TurtlePos = dest;
             }
+
+            else if (c == 'L')
+            {
+                //generate leafy branch
+
+                Vector3 dir = TurtleRot * Vector3.up;
+                Vector3 dest = TurtlePos + dir;
+                GenerateBranch(leafyBranchPrefab, TurtlePos, dest, TurtleRot);
+                TurtlePos = dest;
+
+                //generate leaves on the branch (that's for later)
+            }
+
             else if (c == '+')
             {
                 //rotate turtlerot to the right
@@ -57,9 +99,8 @@ public class Plant : MonoBehaviour
                     TurtleRot *= Quaternion.AngleAxis(rotationAngle, Vector3.right);
 
                 }
-
-                Debug.Log("RODOU PRA DIREITA");
             }
+
             else if (c == '-')
             {
                 //rotate turtlerot to the left
@@ -75,9 +116,8 @@ public class Plant : MonoBehaviour
                 {
                     TurtleRot *= Quaternion.AngleAxis(-rotationAngle, Vector3.right);
                 }
-
-                Debug.Log("RODOU PRA ESQUERDA");
             }
+
             else if (c == '[')
             {
                 savePos = TurtlePos;
@@ -93,15 +133,45 @@ public class Plant : MonoBehaviour
         ChildfyBranches(branches);
     }
 
-    void Update()
+    void ReGeneratePlant(string banana)
     {
+        foreach (GameObject branch in branches)
+        {
+            Destroy(branch);
+        }
 
+        branches.Clear();
+
+        TurtlePos = transform.position;
+        TurtleRot = transform.rotation;
+
+        GeneratePlant(banana);
     }
 
-    void GenerateBranch(Vector3 start, Vector3 end, Quaternion rot)
+    void GenerateBranch(GameObject prefab, Vector3 start, Vector3 end, Quaternion rot)
     {
-        GameObject branch = Instantiate(branchPrefab, start, rot);
+        GameObject branch = Instantiate(prefab, start, rot);
         branches.Add(branch);
+    }
+
+    string ApplyRules(string[] rules, string curString)
+    {
+        //rules are in the format "A -> B"
+
+        string newString = "";
+
+        foreach (char c in curString)
+        {
+            foreach (string rule in rules)
+            {
+                if (rule[0] == c)
+                {
+                    newString += rule.Substring(5);
+                }
+            }
+        }
+
+        return newString;
     }
 
     void ChildfyBranches(List<GameObject> branches)

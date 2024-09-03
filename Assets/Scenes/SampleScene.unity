@@ -243,7 +243,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -269,7 +269,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 30709707}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06213739, y: -0.0000000049367443, z: 3.0735034e-10, w: 0.9980676}
+  m_LocalRotation: {x: 0.062137395, y: -0.0000000032632272, z: 2.03161e-10, w: 0.9980676}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -322,7 +322,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -348,7 +348,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 190925788}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.04397277, y: -0.000000017718781, z: 7.7989826e-10, w: 0.99903274}
+  m_LocalRotation: {x: 0.03886913, y: 0.0000000021490325, z: -8.3594194e-11, w: 0.99924433}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -401,7 +401,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -427,7 +427,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 426331605}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.02584163, y: 0.000000017200632, z: -4.4464088e-10, w: 0.99966604}
+  m_LocalRotation: {x: 0.015680512, y: 1e-45, z: -0, w: 0.9998771}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1018,7 +1018,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 40
+  field of view: 50
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -1044,7 +1044,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.043972768, y: -0.00000003543755, z: 0.0000000015597961, w: 0.99903274}
+  m_LocalRotation: {x: 0.038869128, y: 0.0000000042982746, z: -1.671965e-10, w: 0.99924433}
   m_LocalPosition: {x: 20, y: 33.516, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1126,7 +1126,7 @@ MonoBehaviour:
   m_Follow: {fileID: 617064608}
   m_CommonLens: 1
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -1639,15 +1639,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afe197e03d7fb2c40a46bd5f0cafca1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  branchPrefab: {fileID: 919132149155446097, guid: adc5fe5a75612a74db891bb5300e85ba, type: 3}
+  branchPrefab: {fileID: 919132149155446097, guid: cb960ff79bb7cbc44b9858f17d8b902f, type: 3}
+  leafyBranchPrefab: {fileID: 919132149155446097, guid: 67b6fae13a034244ba64ecafee36db94, type: 3}
+  leafPrefab: {fileID: 0}
   branches: []
   age: 1
-  axiom: F
-  rule: F+F
-  currentString: F
-  finalString: FF+[F+F]--F-F-[FF]++FF
-  rotationAngle: 20
-  randomsiness: -62.33
+  axiom: L
+  rules:
+  - L -> B[-L][+L]
+  - B -> BB
+  currentString: 
+  rotationAngle: 45
+  randomsiness: 0
 --- !u!1 &1490042118
 GameObject:
   m_ObjectHideFlags: 3
