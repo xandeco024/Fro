@@ -7,6 +7,7 @@ public class Plant : MonoBehaviour
 {
     //L SYSTEM ALGORITHM TO GENERATE PROCEDURAL PLANTS
     //https://en.wikipedia.org/wiki/L-system
+    //https://algorithmicbotany.org/papers/abop/abop.pdf
 
     //that script needs to do:
     //generate a base plant
@@ -16,14 +17,16 @@ public class Plant : MonoBehaviour
     //generate fruits (but that's for later)
     //all above, but we can go step by step
 
-    [SerializeField] GameObject branchPrefab;
-    [SerializeField] GameObject leafyBranchPrefab;
-    [SerializeField] GameObject leafPrefab;
     public List<GameObject> branches = new List<GameObject>();
+    public List<GameObject> leaves = new List<GameObject>();
+    public List<GameObject> flowers = new List<GameObject>();
+    public List<GameObject> fruits = new List<GameObject>();
+
+
 
     [Header("L sys Generation")]
     [SerializeField] private int age = 0; //represents the age of the plant (iterations)
-    [SerializeField] private string axiom = "F";
+    [SerializeField] private string axiom;
     [SerializeField] private string[] rules;
     [SerializeField] private string currentString;
     [SerializeField] private float rotationAngle;
@@ -33,6 +36,18 @@ public class Plant : MonoBehaviour
     private Vector3 savePos;
     private Quaternion saveRot;
 
+
+
+    [Header("Branch Generation")]
+    [SerializeField] GameObject branchPrefab;
+    [SerializeField] GameObject leafyBranchPrefab;
+
+
+
+    [Header("Leaves Generation")]
+    [SerializeField] private GameObject leafPrefab;
+    [SerializeField] private float leafDensity;
+    [SerializeField] private float minHeight;
 
     void Start()
     {
@@ -81,6 +96,11 @@ public class Plant : MonoBehaviour
                 TurtlePos = dest;
 
                 //generate leaves on the branch (that's for later)
+                for (int i = 0; i < leafDensity; i++)
+                {
+                    Vector3 leafPos = new Vector3(Random.Range(TurtlePos.x - 0.5f, TurtlePos.x + 0.5f), Random.Range(TurtlePos.y, TurtlePos.y + minHeight), Random.Range(TurtlePos.z - 0.5f, TurtlePos.z + 0.5f));
+                    GenerateLeaf(leafPos, TurtleRot);
+                }
             }
 
             else if (c == '+')
@@ -131,6 +151,7 @@ public class Plant : MonoBehaviour
         }
 
         ChildfyBranches(branches);
+        ChildfyLeaves(leaves);
     }
 
     void ReGeneratePlant(string banana)
@@ -140,7 +161,13 @@ public class Plant : MonoBehaviour
             Destroy(branch);
         }
 
+        foreach (GameObject leaf in leaves)
+        {
+            Destroy(leaf);
+        }
+
         branches.Clear();
+        leaves.Clear();
 
         TurtlePos = transform.position;
         TurtleRot = transform.rotation;
@@ -154,6 +181,12 @@ public class Plant : MonoBehaviour
         branches.Add(branch);
     }
 
+    void GenerateLeaf(Vector3 pos, Quaternion rot)
+    {
+        GameObject leaf = Instantiate(leafPrefab, pos, rot);
+        leaves.Add(leaf);
+    }
+
     string ApplyRules(string[] rules, string curString)
     {
         //rules are in the format "A -> B"
@@ -162,12 +195,21 @@ public class Plant : MonoBehaviour
 
         foreach (char c in curString)
         {
+            bool ruleApplied = false;
+
             foreach (string rule in rules)
             {
                 if (rule[0] == c)
                 {
                     newString += rule.Substring(5);
+                    ruleApplied = true;
+                    break;
                 }
+            }
+
+            if (!ruleApplied)
+            {
+                newString += c;
             }
         }
 
@@ -179,6 +221,14 @@ public class Plant : MonoBehaviour
         foreach (GameObject branch in branches)
         {
             branch.transform.parent = transform;
+        }
+    }
+
+    void ChildfyLeaves(List<GameObject> leaves)
+    {
+        foreach (GameObject leaf in leaves)
+        {
+            leaf.transform.parent = transform;
         }
     }
 

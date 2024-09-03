@@ -269,7 +269,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 30709707}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.062137395, y: -0.0000000032632272, z: 2.03161e-10, w: 0.9980676}
+  m_LocalRotation: {x: 0.0621374, y: -0.0000000059695897, z: 3.716529e-10, w: 0.9980676}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -348,7 +348,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 190925788}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.03886913, y: 0.0000000021490325, z: -8.3594194e-11, w: 0.99924433}
+  m_LocalRotation: {x: 0.038869135, y: 0.0000000021466353, z: -8.350096e-11, w: 0.99924433}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -427,7 +427,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 426331605}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.015680512, y: 1e-45, z: -0, w: 0.9998771}
+  m_LocalRotation: {x: 0.015680512, y: -0, z: -0, w: 0.9998771}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1044,7 +1044,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.038869128, y: 0.0000000042982746, z: -1.671965e-10, w: 0.99924433}
+  m_LocalRotation: {x: 0.03886913, y: 0.0000000042970765, z: -1.6714993e-10, w: 0.99924433}
   m_LocalPosition: {x: 20, y: 33.516, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1639,10 +1639,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afe197e03d7fb2c40a46bd5f0cafca1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  branchPrefab: {fileID: 919132149155446097, guid: cb960ff79bb7cbc44b9858f17d8b902f, type: 3}
-  leafyBranchPrefab: {fileID: 919132149155446097, guid: 67b6fae13a034244ba64ecafee36db94, type: 3}
-  leafPrefab: {fileID: 0}
   branches: []
+  leaves: []
+  flowers: []
+  fruits: []
   age: 1
   axiom: L
   rules:
@@ -1651,6 +1651,11 @@ MonoBehaviour:
   currentString: 
   rotationAngle: 45
   randomsiness: 0
+  branchPrefab: {fileID: 919132149155446097, guid: cb960ff79bb7cbc44b9858f17d8b902f, type: 3}
+  leafyBranchPrefab: {fileID: 919132149155446097, guid: 67b6fae13a034244ba64ecafee36db94, type: 3}
+  leafPrefab: {fileID: 919132149155446097, guid: 8e8fddc78c5fa9d479f3c00af58c8433, type: 3}
+  leafDensity: 10
+  minHeight: 0
 --- !u!1 &1490042118
 GameObject:
   m_ObjectHideFlags: 3
