@@ -26,6 +26,13 @@ public class Player : MonoBehaviour
 
     private bool rotatingForward = false, rotatingBackward = false;
 
+    [Header("Energy")]
+    [SerializeField] private float maxEnergy;
+    [SerializeField] private float currentEnergy;
+    [SerializeField] private float energyGenerationRate;
+    [SerializeField] private float energyConsumptionRate;
+    private bool isDead;
+
     void OnEnable()
     {
         if (inputActions == null)
@@ -67,6 +74,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        currentEnergy = maxEnergy;
     }
 
     void HandleRotation()
@@ -96,6 +104,7 @@ public class Player : MonoBehaviour
     {
         isGrounded = GroundCheck();
         HandleRotation();
+        ConsumeEnergy();
     }
 
     void FixedUpdate()
@@ -106,6 +115,40 @@ public class Player : MonoBehaviour
 
         rb.velocity = transform.TransformDirection(new Vector3(moveDirection.x * s, rb.velocity.y, Mathf.Abs(moveDirection.y) * s));
     }
+
+    #region Energy
+
+    public void ReceiveEnergy(float energy)
+    {
+        currentEnergy += energy;
+        if (currentEnergy > maxEnergy)
+        {
+            currentEnergy = maxEnergy;
+        }
+    }
+
+    void ConsumeEnergy()
+    {
+        float consumption = isRunning ? energyConsumptionRate * 2 : energyConsumptionRate;
+
+        currentEnergy -= consumption * Time.deltaTime;
+
+        if (currentEnergy < 0 && !isDead)
+        {
+            isDead = true;
+            currentEnergy = 0;
+        }
+
+
+        if (isDead)
+        {
+            Debug.Log("You are dead");
+        }
+    }
+
+    #endregion
+
+    #region Movement
 
     private void Jump()
     {
@@ -119,6 +162,8 @@ public class Player : MonoBehaviour
     {
         return Physics.Raycast(transform.position + Vector3.up * rayOffset, Vector3.down, rayDistance, groundLayer);
     }
+
+    #endregion
 
     void OnDrawGizmos()
     {
