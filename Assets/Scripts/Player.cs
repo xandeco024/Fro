@@ -8,13 +8,18 @@ public class Player : MonoBehaviour
     [Header("Components")]
     [SerializeField] private Cinemachine.CinemachineFreeLook freeLookCamera;
     [SerializeField] private Camera mainCamera;
-
     InputActions inputActions;
     private Rigidbody rb;
 
+
+
+    [Header("Movement")]
+    private Vector2 moveInput;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 10f;
-    public Vector2 moveInput;
+    [SerializeField] private GameObject planet;
+
+
 
     [Header("Ground Raycast")]
     private bool isGrounded;
@@ -22,16 +27,12 @@ public class Player : MonoBehaviour
     [SerializeField] private float rayDistance;
     [SerializeField] private LayerMask groundLayer;
 
-    private bool rotatingForward = false, rotatingBackward = false;
-
-
 
 
     [Header("Wachu doin?")]
     private bool isWalking;
     private bool isRunning;
     private bool isJumping;
-
 
 
 
@@ -48,7 +49,6 @@ public class Player : MonoBehaviour
     [SerializeField] private int walkingConsumptionWs;
     [SerializeField] private int runningConsumptionWs;
     [SerializeField] private int jumpConsumptionWs;
-
     private int currentConsumptionWs() {
         int consumption = baseConsumptionWs;
 
@@ -69,9 +69,7 @@ public class Player : MonoBehaviour
 
         return consumption;
     }
-
     public int CurrentConsumptionWs { get { return currentConsumptionWs(); } }
-
     private bool uncharged;
 
     void OnEnable()
@@ -104,8 +102,9 @@ public class Player : MonoBehaviour
     void Update()
     {
         isGrounded = GroundCheck();
-        HandleRotation();
+        //HandleRotation();
         HandleBattery();
+        HandlePlanetRotation();
     }
 
     void FixedUpdate()
@@ -133,9 +132,27 @@ public class Player : MonoBehaviour
         transform.rotation = playerRotation;
     }
 
+    void HandlePlanetRotation()
+    {
+        //the player moves around the planet, so it needs to be rotated to his feet are always pointing to the planet center
+        Vector3 planetCenter = planet.transform.position;
+        Vector3 playerToPlanet = transform.position - planetCenter;
+        Vector3 up = playerToPlanet.normalized;
+
+        transform.rotation = Quaternion.FromToRotation(transform.up, up) * transform.rotation;
+
+        //change gravity direction to the planet center
+        Physics.gravity = -up * 9.81f;
+
+        //rotate the camera according to the player rotation
+        freeLookCamera.
+
+    }
+
     void Movement()
     {
         float s = isRunning ? speed * 2 : speed;
+        s *= currBatteryWh <= 0 ? 0 : 1;
 
         //get the camera forward and move the player in that direction
         Vector3 moveDirection = mainCamera.transform.forward * moveInput.y + mainCamera.transform.right * moveInput.x;
@@ -177,7 +194,7 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        if (isGrounded)
+        if (isGrounded && currBatteryWh > jumpConsumptionWs)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
