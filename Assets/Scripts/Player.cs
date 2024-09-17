@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 10f;
-    public Vector2 moveDirection;
+    public Vector2 moveInput;
 
     [Header("Ground Raycast")]
     private bool isGrounded;
@@ -80,31 +80,14 @@ public class Player : MonoBehaviour
         {
             inputActions = new InputActions();
 
-            inputActions.Player.Movement.performed += ctx => moveDirection = ctx.ReadValue<Vector2>();
+            inputActions.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
             inputActions.Player.Jump.performed += ctx => Jump();
 
             inputActions.Player.Run.started += ctx => isRunning = true;
             inputActions.Player.Run.canceled += ctx => isRunning = false;
-
-            inputActions.Player.Forward.performed += ctx => ToggleForward(true);
-            inputActions.Player.Backward.performed += ctx => ToggleForward(false);
         }
 
         inputActions.Enable();
-    }
-
-    void ToggleForward(bool forward)
-    {
-        if (forward)
-        {
-            rotatingForward = true;
-            rotatingBackward = false;
-        }
-        else
-        {
-            rotatingForward = false;
-            rotatingBackward = true;
-        }
     }
 
     void OnDisable()
@@ -118,29 +101,6 @@ public class Player : MonoBehaviour
         currBatteryWh = maxBatteryWh;
     }
 
-    void HandleRotation()
-    {
-        //smoothly rotate forward if rotatingForward is true
-        if (rotatingForward)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, mainCamera.transform.eulerAngles.y, 0), 0.05f);
-            //when the rotation is almost done, set rotatingForward to false
-            if (transform.rotation == Quaternion.Euler(0, mainCamera.transform.eulerAngles.y, 0))
-            {
-                rotatingForward = false;
-            }
-        }
-        else if (rotatingBackward)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, mainCamera.transform.eulerAngles.y + 180, 0), 0.05f);
-            //when the rotation is almost done, set rotatingBackward to false
-            if (transform.rotation == Quaternion.Euler(0, mainCamera.transform.eulerAngles.y + 180, 0))
-            {
-                rotatingBackward = false;
-            }
-        }
-    }
-
     void Update()
     {
         isGrounded = GroundCheck();
@@ -150,11 +110,39 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        float s = isRunning ? speed * 2 : speed;
-        //apply velocity relative to character rotation
-        //Mathf.Abs(moveDirection.y) pra quando ele andar pra tras ele nao ir de ré, mas sim virar e andar pra tras
+        Movement();
+    }
 
-        rb.velocity = transform.TransformDirection(new Vector3(moveDirection.x * s, rb.velocity.y, Mathf.Abs(moveDirection.y) * s));
+    void HandleRotation()
+    {
+        Vector3 targetDirection = Vector3.zero;
+
+        targetDirection = mainCamera.transform.forward * moveInput.y;
+        targetDirection += mainCamera.transform.right * moveInput.x;
+        targetDirection.Normalize();
+        targetDirection.y = 0;
+
+        if (targetDirection == Vector3.zero)
+        {
+            targetDirection = Vector3.forward;
+        }
+
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+        Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.deltaTime);  
+
+        transform.rotation = playerRotation;
+    }
+
+    void Movement()
+    {
+        float s = isRunning ? speed * 2 : speed;
+
+        //get the camera forward and move the player in that direction
+        Vector3 moveDirection = mainCamera.transform.forward * moveInput.y + mainCamera.transform.right * moveInput.x;
+        moveDirection.Normalize();
+        moveDirection.y = 0;
+
+        rb.velocity = new Vector3(moveDirection.x * s, rb.velocity.y, moveDirection.z * s);
     }
 
     #region Energy
