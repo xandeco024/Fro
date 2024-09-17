@@ -6,21 +6,20 @@ public class Base : MonoBehaviour
 {
     private Player player;
 
-    [SerializeField] private float wirelessEnergyTransferRate;
-    [SerializeField] private float wirelessEnergyTransferDistance;
-    [SerializeField] private float baseEnergyGenerationRate;
-    private float currentEnergyGenerationRate;
-    private float currentEnergy;
-    private float maxEnergy;
+    [SerializeField] private int chargePerSecond;
+    [SerializeField] private int wirelessChargeDistance;
+    [SerializeField] private int baseEnergyGenPerSecond;
+    private int currentEnergyGenPerSecond;
+    private int currentEnergy;
+    [SerializeField] private int maxEnergy;
 
 
 
     void Start()
     {
-        player = GameObject.FindObjectOfType<Player>();
-        maxEnergy = 100;
+        player = FindObjectOfType<Player>();
         currentEnergy = maxEnergy;
-        currentEnergyGenerationRate = baseEnergyGenerationRate;
+        currentEnergyGenPerSecond = baseEnergyGenPerSecond;
     }
 
     // Update is called once per frame
@@ -32,22 +31,11 @@ public class Base : MonoBehaviour
 
     void TransferEnergy()
     {
-        if (Vector3.Distance(player.transform.position, transform.position) < wirelessEnergyTransferDistance)
-        {
-            player.ReceiveEnergy(wirelessEnergyTransferRate * Time.deltaTime);
-            currentEnergy -= wirelessEnergyTransferRate * Time.deltaTime;
-        }
 
-        //draw a line between the base and the player to visualize the energy transfer
-        Debug.DrawLine(transform.position, player.transform.position, Color.blue);
     }
 
     void GenerateEnergy()
     {
-        currentEnergy += currentEnergyGenerationRate * Time.deltaTime;
-        if (currentEnergy > maxEnergy)
-        {
-            currentEnergy = maxEnergy;
-        }
+
     }
 }

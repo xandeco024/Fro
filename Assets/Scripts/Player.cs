@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -13,10 +14,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 10f;
-
-    private bool isRunning;
     public Vector2 moveDirection;
-
 
     [Header("Ground Raycast")]
     private bool isGrounded;
@@ -26,12 +24,55 @@ public class Player : MonoBehaviour
 
     private bool rotatingForward = false, rotatingBackward = false;
 
+
+
+
+    [Header("Wachu doin?")]
+    private bool isWalking;
+    private bool isRunning;
+    private bool isJumping;
+
+
+
+
     [Header("Energy")]
-    [SerializeField] private float maxEnergy;
-    [SerializeField] private float currentEnergy;
-    [SerializeField] private float energyGenerationRate;
-    [SerializeField] private float energyConsumptionRate;
-    private bool isDead;
+    private bool charging;
+    public bool Charging { get { return charging; } }
+    [SerializeField] private float maxBatteryWh;
+    public float MaxBatteryWh { get { return maxBatteryWh; } }
+    [SerializeField] private float currBatteryWh;
+    public float CurrBatteryWh { get { return currBatteryWh; } }
+
+    //consumption
+    [SerializeField] private int baseConsumptionWs;
+    [SerializeField] private int walkingConsumptionWs;
+    [SerializeField] private int runningConsumptionWs;
+    [SerializeField] private int jumpConsumptionWs;
+
+    private int currentConsumptionWs() {
+        int consumption = baseConsumptionWs;
+
+        if (isRunning)
+        {
+            consumption += runningConsumptionWs;
+        }
+
+        else if (isWalking)
+        {
+            consumption += walkingConsumptionWs;
+        }
+
+        if (isJumping)
+        {
+            consumption += jumpConsumptionWs;
+        }
+
+        return consumption;
+    }
+
+    public int CurrentConsumptionWs { get { return currentConsumptionWs(); } }
+
+    private bool uncharged;
 
     void OnEnable()
     {
@@ -74,7 +115,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        currentEnergy = maxEnergy;
+        currBatteryWh = maxBatteryWh;
     }
 
     void HandleRotation()
@@ -104,7 +145,7 @@ public class Player : MonoBehaviour
     {
         isGrounded = GroundCheck();
         HandleRotation();
-        ConsumeEnergy();
+        HandleBattery();
     }
 
     void FixedUpdate()
@@ -120,27 +161,23 @@ public class Player : MonoBehaviour
 
     public void ReceiveEnergy(float energy)
     {
-        currentEnergy += energy;
-        if (currentEnergy > maxEnergy)
-        {
-            currentEnergy = maxEnergy;
-        }
+
     }
 
-    void ConsumeEnergy()
+    void HandleBattery()
     {
-        float consumption = isRunning ? energyConsumptionRate * 2 : energyConsumptionRate;
+        float consumptionWh = (currentConsumptionWs() * Time.deltaTime / 3600) * 60;
+        
+        currBatteryWh -= consumptionWh;
 
-        currentEnergy -= consumption * Time.deltaTime;
-
-        if (currentEnergy < 0 && !isDead)
+        if (currBatteryWh < 0 && !uncharged)
         {
-            isDead = true;
-            currentEnergy = 0;
+            uncharged = true;
+            currBatteryWh = 0;
         }
 
 
-        if (isDead)
+        if (uncharged)
         {
             Debug.Log("You are dead");
         }
