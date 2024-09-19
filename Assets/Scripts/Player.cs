@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
 
 
     [Header("Movement")]
+    private Vector3 up;
     private Vector2 moveInput;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 10f;
@@ -102,9 +103,9 @@ public class Player : MonoBehaviour
     void Update()
     {
         isGrounded = GroundCheck();
-        //HandleRotation();
         HandleBattery();
-        HandlePlanetRotation();
+        IndividualRelativeGravity();
+        //HandleRotation();
     }
 
     void FixedUpdate()
@@ -132,21 +133,24 @@ public class Player : MonoBehaviour
         transform.rotation = playerRotation;
     }
 
-    void HandlePlanetRotation()
+    void IndividualRelativeGravity()
     {
-        //the player moves around the planet, so it needs to be rotated to his feet are always pointing to the planet center
+        // Vector3 planetCenter = planet.transform.position;
+        // Vector3 playerToPlanet = transform.position - planetCenter;
+        // Vector3 up = playerToPlanet.normalized;
+
+        // transform.position = planetCenter + playerToPlanet.normalized * planet.GetComponent<SphereCollider>().radius * 100;
+        // transform.rotation = Quaternion.FromToRotation(transform.up, up) * transform.rotation;
+
         Vector3 planetCenter = planet.transform.position;
         Vector3 playerToPlanet = transform.position - planetCenter;
-        Vector3 up = playerToPlanet.normalized;
+        up = playerToPlanet.normalized;
 
         transform.rotation = Quaternion.FromToRotation(transform.up, up) * transform.rotation;
 
-        //change gravity direction to the planet center
-        Physics.gravity = -up * 9.81f;
+        rb.AddForce(-up * 9.8f, ForceMode.Acceleration);
 
-        //rotate the camera according to the player rotation
-        freeLookCamera.
-
+        //legal, funciono.
     }
 
     void Movement()
@@ -155,11 +159,27 @@ public class Player : MonoBehaviour
         s *= currBatteryWh <= 0 ? 0 : 1;
 
         //get the camera forward and move the player in that direction
-        Vector3 moveDirection = mainCamera.transform.forward * moveInput.y + mainCamera.transform.right * moveInput.x;
-        moveDirection.Normalize();
-        moveDirection.y = 0;
+        Vector3 moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
+        if (moveDirection.magnitude > 0)
+        {
+            isWalking = true;
 
-        rb.velocity = new Vector3(moveDirection.x * s, rb.velocity.y, moveDirection.z * s);
+            moveDirection = mainCamera.transform.rotation * moveDirection;
+
+            if (moveDirection.magnitude > 0.001f)
+            {
+                //rb.MovePosition(transform.position + moveDirection * (s * Time.deltaTime));
+
+                transform.position += moveDirection * (speed * Time.deltaTime);
+            }
+        }
+
+        else
+        {
+            isWalking = false;
+        }
+
+        //rb.velocity = new Vector3(moveDirection.x * s, rb.velocity.y, moveDirection.z * s);
     }
 
     #region Energy
@@ -202,7 +222,7 @@ public class Player : MonoBehaviour
 
     bool GroundCheck()
     {
-        return Physics.Raycast(transform.position + Vector3.up * rayOffset, Vector3.down, rayDistance, groundLayer);
+        return Physics.Raycast(transform.position + up * rayOffset, -up, rayDistance, groundLayer);
     }
 
     #endregion
@@ -210,6 +230,6 @@ public class Player : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawRay(transform.position + Vector3.up * rayOffset, Vector3.down * rayDistance);
+        Gizmos.DrawRay(transform.position + up * rayOffset, -up * rayDistance);
     }
 } 
