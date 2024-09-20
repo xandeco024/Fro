@@ -36,12 +36,14 @@ public class Shelter : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
+        currBatteryKWh = maxBatteryKWh;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        WirelessCharge();
+        HandleBattery();
     }
 
     void WirelessCharge()
@@ -68,6 +70,18 @@ public class Shelter : MonoBehaviour
 
             // Reduz a energia da base (converte Ws de volta para kWh)
             currBatteryKWh -= transfer / 3600f;
+        }
+    }
+
+    void HandleBattery()
+    {
+        currentConsumptionKWs = currentConsumptionKWs * Time.deltaTime / 3600 * 60;
+
+        currBatteryKWh -= currentConsumptionKWs;
+
+        if (currBatteryKWh < 0)
+        {
+            currBatteryKWh = 0;
         }
     }
 }
