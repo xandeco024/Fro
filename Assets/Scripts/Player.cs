@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float maxBatteryWh;
     public float MaxBatteryWh { get { return maxBatteryWh; } }
     [SerializeField] private float currBatteryWh;
-    public float CurrBatteryWh { get { return currBatteryWh; } }
+    public float CurrBatteryWh { get { return currBatteryWh; }}
 
     //consumption
     [SerializeField] private int baseConsumptionWs;
@@ -184,9 +184,10 @@ public class Player : MonoBehaviour
 
     #region Energy
 
-    public void ReceiveEnergy(float energy)
+    public void Charge(float amountWs)
     {
-
+        float charge = amountWs / 3600;
+        currBatteryWh = Mathf.Min(currBatteryWh + charge, maxBatteryWh);
     }
 
     void HandleBattery()
