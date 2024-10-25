@@ -6,19 +6,15 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] private Cinemachine.CinemachineFreeLook freeLookCamera;
-    [SerializeField] private Camera mainCamera;
     InputActions inputActions;
-    private Rigidbody rb;
+    private Rigidbody2D rb;
 
 
 
     [Header("Movement")]
-    private Vector3 up;
     private Vector2 moveInput;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private GameObject planet;
 
 
 
@@ -73,6 +69,12 @@ public class Player : MonoBehaviour
     public int CurrentConsumptionWs { get { return currentConsumptionWs(); } }
     private bool uncharged;
 
+
+
+    [Header("Tools")]
+    [SerializeField] private float destroySpeed;
+    public float DestroySpeed { get { return destroySpeed; } }
+
     void OnEnable()
     {
         if (inputActions == null)
@@ -96,7 +98,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody2D>();
         currBatteryWh = maxBatteryWh;
     }
 
@@ -104,8 +106,6 @@ public class Player : MonoBehaviour
     {
         isGrounded = GroundCheck();
         HandleBattery();
-        IndividualRelativeGravity();
-        //HandleRotation();
     }
 
     void FixedUpdate()
@@ -113,73 +113,13 @@ public class Player : MonoBehaviour
         Movement();
     }
 
-    void HandleRotation()
-    {
-        Vector3 targetDirection = Vector3.zero;
-
-        targetDirection = mainCamera.transform.forward * moveInput.y;
-        targetDirection += mainCamera.transform.right * moveInput.x;
-        targetDirection.Normalize();
-        targetDirection.y = 0;
-
-        if (targetDirection == Vector3.zero)
-        {
-            targetDirection = Vector3.forward;
-        }
-
-        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-        Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.deltaTime);  
-
-        transform.rotation = playerRotation;
-    }
-
-    void IndividualRelativeGravity()
-    {
-        // Vector3 planetCenter = planet.transform.position;
-        // Vector3 playerToPlanet = transform.position - planetCenter;
-        // Vector3 up = playerToPlanet.normalized;
-
-        // transform.position = planetCenter + playerToPlanet.normalized * planet.GetComponent<SphereCollider>().radius * 100;
-        // transform.rotation = Quaternion.FromToRotation(transform.up, up) * transform.rotation;
-
-        Vector3 planetCenter = planet.transform.position;
-        Vector3 playerToPlanet = transform.position - planetCenter;
-        up = playerToPlanet.normalized;
-
-        transform.rotation = Quaternion.FromToRotation(transform.up, up) * transform.rotation;
-
-        rb.AddForce(-up * 9.8f, ForceMode.Acceleration);
-
-        //legal, funciono.
-    }
-
     void Movement()
     {
-        float s = isRunning ? speed * 2 : speed;
+        float s = isRunning ? speed * 1.5f : speed;
         s *= currBatteryWh <= 0 ? 0 : 1;
 
-        //get the camera forward and move the player in that direction
-        Vector3 moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
-        if (moveDirection.magnitude > 0)
-        {
-            isWalking = true;
-
-            moveDirection = mainCamera.transform.rotation * moveDirection;
-
-            if (moveDirection.magnitude > 0.001f)
-            {
-                //rb.MovePosition(transform.position + moveDirection * (s * Time.deltaTime));
-
-                transform.position += moveDirection * (speed * Time.deltaTime);
-            }
-        }
-
-        else
-        {
-            isWalking = false;
-        }
-
-        //rb.velocity = new Vector3(moveDirection.x * s, rb.velocity.y, moveDirection.z * s);
+        Vector2 move = new Vector2(moveInput.x, 0) * s;
+        rb.velocity = new Vector2(move.x, rb.velocity.y);
     }
 
     #region Energy
@@ -217,13 +157,13 @@ public class Player : MonoBehaviour
     {
         if (isGrounded && currBatteryWh > jumpConsumptionWs)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse);
         }
     }
 
     bool GroundCheck()
     {
-        return Physics.Raycast(transform.position + up * rayOffset, -up, rayDistance, groundLayer);
+        return Physics2D.Raycast(transform.position + Vector3.up * rayOffset, Vector2.down, rayDistance, groundLayer);
     }
 
     #endregion
@@ -231,6 +171,6 @@ public class Player : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawRay(transform.position + up * rayOffset, -up * rayDistance);
+        Gizmos.DrawLine(transform.position + Vector3.up * rayOffset, transform.position + Vector3.up * rayOffset + Vector3.down * rayDistance);
     }
 } 
