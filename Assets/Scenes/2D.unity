@@ -3699,7 +3699,7 @@ GameObject:
   - component: {fileID: 1650628968}
   m_Layer: 0
   m_Name: "2D P\xE1dua"
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3766,7 +3766,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 23.811804, y: 32.80397, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3857,7 +3857,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 7
   jumpForce: 14
-  rayOffset: -0.5
+  rayOffset: -1
   rayDistance: 0.25
   groundLayer:
     serializedVersion: 2
@@ -3868,6 +3868,7 @@ MonoBehaviour:
   walkingConsumptionWs: 10
   runningConsumptionWs: 20
   jumpConsumptionWs: 15
+  destroySpeed: 0.2
 --- !u!1 &1913383511
 GameObject:
   m_ObjectHideFlags: 0
