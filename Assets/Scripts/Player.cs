@@ -120,6 +120,21 @@ public class Player : MonoBehaviour
 
         Vector2 move = new Vector2(moveInput.x, 0) * s;
         rb.velocity = new Vector2(move.x, rb.velocity.y);
+
+        //flip sprite by changing scale
+        Flip(moveInput.x);
+    }
+
+    void Flip(float xInput)
+    {
+        if (xInput > 0 && transform.localScale.x < 0)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        else if (xInput < 0 && transform.localScale.x > 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
     }
 
     #region Energy

@@ -13,7 +13,10 @@ public class InteractableTilemap : MonoBehaviour
     private float destroyProgress = 0;
     private TileBase selectedTile;
     private TileBase lastSelectedTile;
-    private Sprite selectedTileSprite;
+    [SerializeField] private GameObject selectedTileUI;
+    [SerializeField] private GameObject crackEffectUI;
+
+
 
     void Start()
     {
@@ -35,16 +38,23 @@ public class InteractableTilemap : MonoBehaviour
             if (selectedTile == lastSelectedTile)
             {
                 destroyProgress += player.DestroySpeed;
+                if (!crackEffectUI.activeSelf)
+                {
+                    crackEffectUI.SetActive(true);
+                    crackEffectUI.transform.position = tilemap.GetCellCenterWorld(coordinate);
+                }
             }
             else
             {
                 destroyProgress = 0;
+                crackEffectUI.SetActive(true);
             }
 
             if (destroyProgress >= 100)
             {
                 tilemap.SetTile(coordinate, null);
                 destroyProgress = 0;
+                crackEffectUI.SetActive(false);
             }
 
             lastSelectedTile = selectedTile;
@@ -57,7 +67,12 @@ public class InteractableTilemap : MonoBehaviour
 
         if (tilemap.GetTile(coordinate) != null)
         {
-
+            selectedTileUI.SetActive(true);
+            selectedTileUI.transform.position = tilemap.GetCellCenterWorld(coordinate);
+        }
+        else
+        {
+            selectedTileUI.SetActive(false);
         }
     }
 }
