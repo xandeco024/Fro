@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f85bafd262e8dc408444faed3f27ae4, type: 3}
+  m_Name: StoneTile
+  m_EditorClassIdentifier: 
+  tileName: Stone
+  tileHealth: 20
+  tiles:
+  - {fileID: 11400000, guid: 155f25bc7bb396b4b8d6d9134036299b, type: 2}
+  - {fileID: 11400000, guid: 35bb67781b4b4dd48ac053d69b8b16cd, type: 2}
+  - {fileID: 11400000, guid: 625e9d4cf3cb184458800b3642e0d4ea, type: 2}
+  - {fileID: 11400000, guid: deb97034016fc9348b53359b03e02dc1, type: 2}
+  - {fileID: 11400000, guid: d73b0b1f8473d564aa1f90edc21130a0, type: 2}
+  - {fileID: 11400000, guid: c90b7bde2c446a642be5ceac078cfebc, type: 2}
+  - {fileID: 11400000, guid: beace538e16eaaa46b2c4af8fbeb735f, type: 2}
+  - {fileID: 11400000, guid: a47106fc19c1c6a498aa515cd796dee8, type: 2}
+  - {fileID: 11400000, guid: 93de820f4766e924c8e5c146babe9bd4, type: 2}
+  - {fileID: 11400000, guid: 36e2a910dd1eebd41a6ec2c0241b7d22, type: 2}
+  - {fileID: 11400000, guid: 95abcd7fd6bc6cd4e9bbb6f1af8394f5, type: 2}
+  - {fileID: 11400000, guid: 49ee494b564d94248b3281b2638e6153, type: 2}
+  - {fileID: 11400000, guid: ba1783313c84d654e8022db63bea0528, type: 2}
+  tileParticles: {fileID: 0}
+  tileDrop: {fileID: 7327463723438029454, guid: 741aa6b01c106b549bb7016128484d0f, type: 3}

@@ -32,6 +32,6 @@ public class Parallax : MonoBehaviour
         else if (temp < transform.position.x - width)
         {
             transform.position = new Vector3(leftClone.transform.position.x - width, transform.position.y, transform.position.z);
-        }d
+        }
     }
 }
