@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StoneTile
   m_EditorClassIdentifier: 
   tileName: Stone
-  tileHealth: 20
+  health: 0
   tiles:
   - {fileID: 11400000, guid: 155f25bc7bb396b4b8d6d9134036299b, type: 2}
   - {fileID: 11400000, guid: 35bb67781b4b4dd48ac053d69b8b16cd, type: 2}
@@ -28,5 +28,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 95abcd7fd6bc6cd4e9bbb6f1af8394f5, type: 2}
   - {fileID: 11400000, guid: 49ee494b564d94248b3281b2638e6153, type: 2}
   - {fileID: 11400000, guid: ba1783313c84d654e8022db63bea0528, type: 2}
-  tileParticles: {fileID: 0}
-  tileDrop: {fileID: 7327463723438029454, guid: 741aa6b01c106b549bb7016128484d0f, type: 3}
+  particles: {fileID: 0}
+  drop: {fileID: 7327463723438029454, guid: 741aa6b01c106b549bb7016128484d0f, type: 3}
+  isDestructible: 1

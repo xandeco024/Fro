@@ -7,14 +7,28 @@ using UnityEngine.Tilemaps;
 public class TileData : ScriptableObject
 {
     [SerializeField] private string tileName;
-    [SerializeField] private int tileHealth;
+    [SerializeField] private float health;
+    private float currentHealth;
     [SerializeField] private List<TileBase> tiles;
-    [SerializeField] private GameObject tileParticles;
-    [SerializeField] private GameObject tileDrop;
+    [SerializeField] private GameObject particles;
+    [SerializeField] private GameObject drop;
+    [SerializeField] private bool isDestructible;
 
-    public string TileName { get { return tileName; } }
-    public int TileHealth { get { return tileHealth; } }
+    public string Name { get { return tileName; } }
+    public float Health { get { return health; } }
+    public float CurrentHealth { get { return currentHealth; } set { currentHealth = value; } }
     public List<TileBase> Tiles { get { return tiles; } }
-    public GameObject TileParticles { get { return tileParticles; } }
-    public GameObject TileDrop { get { return tileDrop; } }
+    public GameObject Particles { get { return particles; } }
+    public GameObject Drop { get { return drop; } }
+    public bool IsDestructible { get { return isDestructible; } }
+
+    public void ResetHealth()
+    {
+        currentHealth = health;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+    }
 }

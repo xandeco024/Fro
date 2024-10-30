@@ -10,9 +10,7 @@ public class PlayerTools : MonoBehaviour
 
     [Header("Destroy")]
     [SerializeField] private float destroyRange;
-    [SerializeField] private int destroyDamage;
-    private float destroyProgress;
-    private float tileHealth;
+    [SerializeField] private float destroyDamage;
 
     void Start()
     {
@@ -23,31 +21,22 @@ public class PlayerTools : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (tilemapManager.GetSelectedTileBase() != null)
-            {
-                tileHealth = tilemapManager.GetSelectedTileData().TileHealth;
-                destroyProgress = 0;
-            }
-        }
-
         if (Input.GetMouseButton(0))
         {
-            float distance = Vector3.Distance(player.transform.position, tilemapManager.GetSelectedTileCoordinate());
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3Int tilePosition = tilemapManager.GetTileCoordinate(mouseWorldPos);
+            tilePosition.z = 0;
+
+            float distance = Vector3.Distance(player.transform.position, tilePosition);
+
             if (distance <= destroyRange)
             {
-                destroyProgress += destroyDamage * Time.deltaTime;
-                if (destroyProgress >= tileHealth)
+                bool tileDestroyed = tilemapManager.ApplyDamageToTile(tilePosition, destroyDamage * Time.deltaTime);
+                if (tileDestroyed)
                 {
-                    tilemapManager.DestroyTile(tilemapManager.GetSelectedTileCoordinate());
-                    destroyProgress = 0;
+                    Debug.Log("Tile destruído!");
                 }
             }
-        }
-        else 
-        {
-            destroyProgress = 0;
         }
     }
 }
