@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1435,8 +1435,8 @@ Tilemap:
   - first: {x: -5, y: -4, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 4
-      m_TileSpriteIndex: 4
+      m_TileIndex: 5
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -1445,8 +1445,8 @@ Tilemap:
   - first: {x: -4, y: -4, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 4
-      m_TileSpriteIndex: 4
+      m_TileIndex: 5
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -1455,8 +1455,8 @@ Tilemap:
   - first: {x: -3, y: -4, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 4
-      m_TileSpriteIndex: 4
+      m_TileIndex: 5
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -1532,9 +1532,9 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 03d04b355165cfe43b5e0d5714b40ec6, type: 2}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 6
-    m_Data: {fileID: 11400000, guid: bfa53a5997c6c0d4e8f6976a5c09f9ec, type: 2}
   - m_RefCount: 3
+    m_Data: {fileID: 11400000, guid: bfa53a5997c6c0d4e8f6976a5c09f9ec, type: 2}
+  - m_RefCount: 6
     m_Data: {fileID: 11400000, guid: beace538e16eaaa46b2c4af8fbeb735f, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 0
@@ -1545,9 +1545,9 @@ Tilemap:
     m_Data: {fileID: -260956017, guid: f4a9c7c6ac9a81f449273f1b38a4adc3, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 6
-    m_Data: {fileID: 649906852, guid: f4a9c7c6ac9a81f449273f1b38a4adc3, type: 3}
   - m_RefCount: 3
+    m_Data: {fileID: 649906852, guid: f4a9c7c6ac9a81f449273f1b38a4adc3, type: 3}
+  - m_RefCount: 6
     m_Data: {fileID: 348417353, guid: f4a9c7c6ac9a81f449273f1b38a4adc3, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 12
@@ -2760,7 +2760,7 @@ MonoBehaviour:
   walkingConsumptionWs: 10
   runningConsumptionWs: 20
   jumpConsumptionWs: 15
-  destroySpeed: 0.5
+  destroySpeed: 10
 --- !u!114 &1650628969
 MonoBehaviour:
   m_ObjectHideFlags: 0

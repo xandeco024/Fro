@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DirtTile
   m_EditorClassIdentifier: 
   tileName: Dirt
-  health: 0
+  health: 5
   tiles:
   - {fileID: 11400000, guid: 9acba575e0d41834b8c50b047b0ac362, type: 2}
   - {fileID: 11400000, guid: 03d04b355165cfe43b5e0d5714b40ec6, type: 2}

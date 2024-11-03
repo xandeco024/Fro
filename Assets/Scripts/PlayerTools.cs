@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -24,17 +25,16 @@ public class PlayerTools : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int tilePosition = tilemapManager.GetTileCoordinate(mouseWorldPos);
-            tilePosition.z = 0;
+            Vector3Int coordinate = tilemapManager.Tilemap.WorldToCell(mouseWorldPos);
+            coordinate.z = 0;
+            Tile tile = tilemapManager.GetTile(coordinate);
 
-            float distance = Vector3.Distance(player.transform.position, tilePosition);
-
-            if (distance <= destroyRange)
+            if (tile != null && Vector3.Distance(player.transform.position, tile.Coordinate) <= destroyRange)
             {
-                bool tileDestroyed = tilemapManager.ApplyDamageToTile(tilePosition, destroyDamage * Time.deltaTime);
-                if (tileDestroyed)
+                tile.Damage(destroyDamage * Time.deltaTime);
+                if (tile.CurrentHealth <= 0)
                 {
-                    Debug.Log("Tile destruído!");
+                    tilemapManager.DestroyTile(tile.Coordinate);
                 }
             }
         }

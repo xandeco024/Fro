@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StoneTile
   m_EditorClassIdentifier: 
   tileName: Stone
-  health: 0
+  health: 15
   tiles:
   - {fileID: 11400000, guid: 155f25bc7bb396b4b8d6d9134036299b, type: 2}
   - {fileID: 11400000, guid: 35bb67781b4b4dd48ac053d69b8b16cd, type: 2}
