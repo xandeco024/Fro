@@ -6,8 +6,8 @@ using UnityEngine;
 public class InfoPanel : MonoBehaviour
 {
     [SerializeField] private RectTransform panelRect;
-    [SerializeField] private RectTransform titleRect;
-    [SerializeField] private TextMeshProUGUI infoPrefab;
+    [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private TextMeshProUGUI[] infoTexts;
 
     [SerializeField] private float marginTop, marginBottom, marginLeft, marginRight;
     [SerializeField] private float titleHeight, descriptionHeight, infoHeight;
@@ -30,21 +30,18 @@ public class InfoPanel : MonoBehaviour
     public void SetTitle(string title)
     {
         this.title = title;
-        
+        titleText.text = title;
     }
 
-    public void SetDescription(string description)
-    {
-        this.description = description;
-    }
 
     public void SetInfos(string[] infos)
     {
         this.infos = infos;
     }
 
-    public void UpdatePanel()
+    public void UpdatePanel(string title, string description = null, string[] infos = null)
     {
-
+        SetTitle(title);
+        SetInfos(infos);
     }
 }

@@ -19,6 +19,11 @@ public class PlayerTools : MonoBehaviour
 
     [Header("Scanner")]
     [SerializeField] private bool hasScannerTool;
+    private float scanTimeCounter;
+    private float scanTime = .2f;
+    private bool scanning;
+    private Tile lastScannedTile;
+    [SerializeField] private GameObject infoPanelPrefab;
 
     void Start()
     {
@@ -30,6 +35,14 @@ public class PlayerTools : MonoBehaviour
     void Update()
     {
         if (hasDestroyTool) HandleDestroyTool(tilemapManager.GetSelectedTile());
+
+        if (hasScannerTool) {
+            if (Input.GetMouseButtonDown(1))
+            {
+                GameObject infoPanel = Instantiate(infoPanelPrefab, transform.position, Quaternion.identity);
+                infoPanel.GetComponent<InfoPanel>().UpdatePanel(lastScannedTile.Name);
+            }
+        }
 
     }
 
