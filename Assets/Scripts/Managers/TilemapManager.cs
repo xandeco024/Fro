@@ -8,18 +8,21 @@ public class TilemapManager : MonoBehaviour
     public Tilemap Tilemap { get => tilemap; }
     private Player player;
     private Tile selectedTile;
-    [SerializeField] private GameObject selectedTileUI;
-    [SerializeField] private GameObject crackEffectUI;
+    [SerializeField] private GameObject selectedTileObject;
+    [SerializeField] private GameObject crackObject;
+    [SerializeField] private Sprite[] crackSprites = new Sprite[8];
 
     // Usando um dicionário para acessar dados dos tiles mais rapidamente
     private Dictionary<TileBase, TileData> tileDataDict = new Dictionary<TileBase, TileData>();
     public Dictionary<Vector3Int, Tile> tiles = new Dictionary<Vector3Int, Tile>();
     [SerializeField] private List<TileData> tileData;
+    private Camera mainCamera;
 
     void Start()
     {
         tilemap = GetComponent<Tilemap>();
         player = FindObjectOfType<Player>();
+        mainCamera = Camera.main;
 
         // Inicializar dicionário de TileData
         foreach (var data in tileData)
@@ -41,46 +44,47 @@ public class TilemapManager : MonoBehaviour
             {
                 tiles[localPlace] = new Tile(localPlace, data);
                 tiles[localPlace].Reset();
-
-            Debug.Log("CRIADO TILE EM " + localPlace + "\n" +
-                    "Nome: " + tiles[localPlace].Name + "\n" +
-                    "Vida: " + tiles[localPlace].Health + "\n" +
-                    "Vida Atual: " + tiles[localPlace].CurrentHealth);
             }
         }
     }
 
     void Update()
     {
-        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         Vector3Int coordinate = tilemap.WorldToCell(mouseWorldPos);
         coordinate.z = 0;
 
-        if (selectedTile != null && coordinate != selectedTile.Coordinate)
-        {
-            UpdateSelectedTile(coordinate);
-        }
-        else if (selectedTile == null)
-        {
-            UpdateSelectedTile(coordinate);
-        }
-    }
-
-    private void UpdateSelectedTile(Vector3Int coordinate)
-    {
         selectedTile = GetTile(coordinate);
+
         if (selectedTile != null)
         {
-            selectedTileUI.SetActive(true);
-            selectedTileUI.transform.position = tilemap.GetCellCenterWorld(coordinate); 
-
-            Debug.Log(selectedTile.Name);
-            Debug.Log(selectedTile.CurrentHealth);
-            Debug.Log(selectedTile.Health);       
+            selectedTileObject.SetActive(true);
+            selectedTileObject.transform.position = tilemap.GetCellCenterWorld(coordinate); 
         }   
         else
         {
-            selectedTileUI.SetActive(false);
+            selectedTileObject.SetActive(false);
+        }
+
+        UpdateCrack(selectedTile);
+    }
+
+    void UpdateCrack(Tile selectedTile)
+    {
+        if (selectedTile != null && selectedTile.CurrentHealth < selectedTile.Health && selectedTile.CurrentHealth > 0)
+        {
+            if (!crackObject.activeSelf)
+            {
+                crackObject.SetActive(true);
+                crackObject.transform.position = tilemap.GetCellCenterWorld(selectedTile.Coordinate);
+            }
+
+            int index = (int)((1 - (selectedTile.CurrentHealth / selectedTile.Health)) * crackSprites.Length);
+            crackObject.GetComponent<SpriteRenderer>().sprite = crackSprites[Mathf.Clamp(index, 0, crackSprites.Length - 1)];
+        }
+        else
+        {
+            crackObject.SetActive(false);
         }
     }
 
