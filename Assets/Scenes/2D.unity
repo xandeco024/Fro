@@ -2782,12 +2782,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 673ecd945475b7049883101e9cb8fb3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toolsRange: 5
   hasDestroyTool: 1
-  destroyRange: 5
   destroyDamage: 2
   hasBuildTool: 1
   hasScannerTool: 1
   infoPanelPrefab: {fileID: 2338736346226126581, guid: fb47769d97d8cc24a868d579fcb18557, type: 3}
+  hasWateringTool: 1
+  tankCapacity: 100
+  tankLevel: 0
 --- !u!1 &1708554391
 GameObject:
   m_ObjectHideFlags: 0
