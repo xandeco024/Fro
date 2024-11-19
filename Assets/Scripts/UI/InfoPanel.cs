@@ -7,18 +7,14 @@ public class InfoPanel : MonoBehaviour
 {
     [SerializeField] private RectTransform panelRect;
     [SerializeField] private TextMeshProUGUI titleText;
-    [SerializeField] private TextMeshProUGUI[] infoTexts;
-
-    [SerializeField] private float marginTop, marginBottom, marginLeft, marginRight;
-    [SerializeField] private float titleHeight, descriptionHeight, infoHeight;
-    [SerializeField] private float titleFontSize, descriptionFontSize, infoFontSize;
-    private string title;
-    private string description;
-    private string[] infos;
+    [SerializeField] private TextMeshProUGUI temperatureText;
+    [SerializeField] private TextMeshProUGUI luminosityText;
+    [SerializeField] private TextMeshProUGUI lifeSupportText;
+    [SerializeField] private TextMeshProUGUI wetnessText;
 
     void Start()
     {
-        
+        panelRect = GetComponent<RectTransform>();
     }
 
     // Update is called once per frame
@@ -27,21 +23,12 @@ public class InfoPanel : MonoBehaviour
         
     }
 
-    public void SetTitle(string title)
+    public void UpdatePanel(string title, int temperature, int luminosity, int lifeSupport, int wetness)
     {
-        this.title = title;
         titleText.text = title;
-    }
-
-
-    public void SetInfos(string[] infos)
-    {
-        this.infos = infos;
-    }
-
-    public void UpdatePanel(string title, string description = null, string[] infos = null)
-    {
-        SetTitle(title);
-        SetInfos(infos);
+        temperatureText.text = "- temperature: " + temperature + "°C";
+        luminosityText.text = "- luminosity: " + luminosity + " lumens";
+        lifeSupportText.text = "- life Support: " + lifeSupport;
+        wetnessText.text = "- wetness: " + wetness;   
     }
 }

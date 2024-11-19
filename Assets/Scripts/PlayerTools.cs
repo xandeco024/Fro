@@ -8,6 +8,7 @@ public class PlayerTools : MonoBehaviour
 {
     private Player player;
     private TilemapManager tilemapManager;
+    private Tile selectedTile;
 
     [Header("Destroy")]
     [SerializeField] private bool hasDestroyTool;
@@ -24,6 +25,7 @@ public class PlayerTools : MonoBehaviour
     private bool scanning;
     private Tile lastScannedTile;
     [SerializeField] private GameObject infoPanelPrefab;
+    private InfoPanel currentInfoPanel;
 
     void Start()
     {
@@ -37,13 +39,32 @@ public class PlayerTools : MonoBehaviour
         if (hasDestroyTool) HandleDestroyTool(tilemapManager.GetSelectedTile());
 
         if (hasScannerTool) {
-            if (Input.GetMouseButtonDown(1))
+            //get player position relative to the canvas
+            if (selectedTile != null && lastScannedTile != selectedTile)
             {
-                GameObject infoPanel = Instantiate(infoPanelPrefab, transform.position, Quaternion.identity);
-                infoPanel.GetComponent<InfoPanel>().UpdatePanel(lastScannedTile.Name);
+                if (currentInfoPanel != null)
+                {
+                    Destroy(currentInfoPanel.gameObject);
+                }
+
+                lastScannedTile = selectedTile;
+                Vector2 playerPosition = Camera.main.WorldToScreenPoint(selectedTile.Coordinate);
+                currentInfoPanel = Instantiate(infoPanelPrefab, playerPosition, Quaternion.identity).GetComponent<InfoPanel>();
+                currentInfoPanel.GetComponent<InfoPanel>().UpdatePanel(
+                    selectedTile.Name,
+                    selectedTile.Temperature,
+                    selectedTile.Luminosity,
+                    selectedTile.LifeSupport,
+                    selectedTile.Wetness);
+                currentInfoPanel.transform.SetParent(GameObject.Find("HUD").transform);
             }
+            // else if (GameObject.Find("Tile Info Panel(Clone)") != null)
+            // {
+            //     Destroy(GameObject.Find("Tile Info Panel(Clone)"));
+            // }
         }
 
+        selectedTile = tilemapManager.GetSelectedTile();
     }
 
     public void SetDestroyTool(bool value)
