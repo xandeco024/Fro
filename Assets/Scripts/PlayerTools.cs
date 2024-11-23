@@ -11,7 +11,10 @@ public class PlayerTools : MonoBehaviour
     private Tile selectedTile;
 
     [SerializeField] private float toolsRange;
-    private int currentToolIndex = 0;
+    private int currentToolIndex = 1;
+    public int CurrentToolIndex { get { return currentToolIndex; } }
+    private bool selectingTool;
+    public bool SelectingTool { get { return selectingTool; } }
 
     [Header("Destroy")]
     [SerializeField] private bool hasDestroyTool;
@@ -41,8 +44,9 @@ public class PlayerTools : MonoBehaviour
 
     void Update()
     {
-        currentToolIndex = UpdateSelectedTool();
         selectedTile = tilemapManager.GetSelectedTile();
+
+        HandleToolsPanel();
 
         if (CanUseTool())
         {
@@ -51,11 +55,11 @@ public class PlayerTools : MonoBehaviour
             switch (currentToolIndex)
             {
                 case 1:
-                    HandleDestroyTool();
+                    //hand tool
                     break;
 
                 case 2:
-                    //HandleBuildTool(selectedTile);
+                    HandleTerrainTool();
                     break;
 
                 case 3:
@@ -73,16 +77,30 @@ public class PlayerTools : MonoBehaviour
         return selectedTile != null && Vector3.Distance(player.transform.position, selectedTile.Coordinate) <= toolsRange;
     }
 
+    void HandleToolsPanel()
+    {
+        if (Input.GetKey(KeyCode.Z))
+        {
+            selectingTool = true;
+            currentToolIndex = UpdateSelectedTool();
+        }
+
+        else 
+        {
+            selectingTool = false;
+        }
+    }
+
     private int UpdateSelectedTool()
     {
-        if (Input.GetKeyDown(KeyCode.Keypad1) && hasDestroyTool) return 1;
-        if (Input.GetKeyDown(KeyCode.Keypad2) && hasBuildTool) return 2;
-        if (Input.GetKeyDown(KeyCode.Keypad3) && hasWateringTool) return 3;
+        if (Input.GetKeyDown(KeyCode.Alpha1)) return 1;
+        if (Input.GetKeyDown(KeyCode.Alpha2) && hasDestroyTool) return 2;
+        if (Input.GetKeyDown(KeyCode.Alpha3) && hasBuildTool) return 3;
 
         return currentToolIndex;
     }
 
-    public void HandleDestroyTool()
+    public void HandleTerrainTool()
     {
         if (Input.GetMouseButton(0))
         {

@@ -139,6 +139,16 @@ public class Player : MonoBehaviour
 
     #region Energy
 
+    public void ConsumeEnergyWS(int amountWs)
+    {
+        currBatteryWh -= amountWs / 3600;
+    }
+
+    public void ConsumeEnergyW(int amountW)
+    {
+        currBatteryWh -= amountW;
+    }
+
     public void Charge(float amountWs)
     {
         float charge = amountWs / 3600;
