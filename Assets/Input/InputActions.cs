@@ -55,19 +55,19 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Forward"",
+                    ""name"": ""RightClick"",
                     ""type"": ""Button"",
-                    ""id"": ""93eb18f7-407b-4bbe-9bf7-94624a3e11f8"",
-                    ""expectedControlType"": ""Button"",
+                    ""id"": ""792bf175-e359-4989-9e4c-9f33f4f933ea"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Backward"",
+                    ""name"": ""LeftClick"",
                     ""type"": ""Button"",
-                    ""id"": ""8da727d9-c09e-4756-9da0-a5d61d297175"",
-                    ""expectedControlType"": ""Button"",
+                    ""id"": ""d7a6e07e-5647-4080-8242-d15a37d2695e"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -230,45 +230,45 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f65984b1-a7e3-4f25-801c-c92879a55f73"",
-                    ""path"": ""<Keyboard>/w"",
+                    ""id"": ""766e88e1-9f51-40be-acf0-6494273375af"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard & Mouse"",
-                    ""action"": ""Forward"",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""57eb4e61-94a2-4196-a9b9-19f4de12ac73"",
-                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""id"": ""f8749a2b-3ae8-4453-99ed-797f2a265f20"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Forward"",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""6e628828-c4ec-4608-a307-4e9642e995ae"",
-                    ""path"": ""<Keyboard>/s"",
+                    ""id"": ""424ebd1c-e74b-4a04-b5df-37cf58623ee7"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard & Mouse"",
-                    ""action"": ""Backward"",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""LeftClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""4d6b59c1-af89-40ce-ae52-b43bb41eb863"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""id"": ""5c37ead7-55bd-4a31-b8df-63f94f746bcc"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Backward"",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""LeftClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -310,8 +310,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
-        m_Player_Forward = m_Player.FindAction("Forward", throwIfNotFound: true);
-        m_Player_Backward = m_Player.FindAction("Backward", throwIfNotFound: true);
+        m_Player_RightClick = m_Player.FindAction("RightClick", throwIfNotFound: true);
+        m_Player_LeftClick = m_Player.FindAction("LeftClick", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -381,8 +381,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Run;
-    private readonly InputAction m_Player_Forward;
-    private readonly InputAction m_Player_Backward;
+    private readonly InputAction m_Player_RightClick;
+    private readonly InputAction m_Player_LeftClick;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -390,8 +390,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Run => m_Wrapper.m_Player_Run;
-        public InputAction @Forward => m_Wrapper.m_Player_Forward;
-        public InputAction @Backward => m_Wrapper.m_Player_Backward;
+        public InputAction @RightClick => m_Wrapper.m_Player_RightClick;
+        public InputAction @LeftClick => m_Wrapper.m_Player_LeftClick;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -410,12 +410,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Run.started += instance.OnRun;
             @Run.performed += instance.OnRun;
             @Run.canceled += instance.OnRun;
-            @Forward.started += instance.OnForward;
-            @Forward.performed += instance.OnForward;
-            @Forward.canceled += instance.OnForward;
-            @Backward.started += instance.OnBackward;
-            @Backward.performed += instance.OnBackward;
-            @Backward.canceled += instance.OnBackward;
+            @RightClick.started += instance.OnRightClick;
+            @RightClick.performed += instance.OnRightClick;
+            @RightClick.canceled += instance.OnRightClick;
+            @LeftClick.started += instance.OnLeftClick;
+            @LeftClick.performed += instance.OnLeftClick;
+            @LeftClick.canceled += instance.OnLeftClick;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -429,12 +429,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Run.started -= instance.OnRun;
             @Run.performed -= instance.OnRun;
             @Run.canceled -= instance.OnRun;
-            @Forward.started -= instance.OnForward;
-            @Forward.performed -= instance.OnForward;
-            @Forward.canceled -= instance.OnForward;
-            @Backward.started -= instance.OnBackward;
-            @Backward.performed -= instance.OnBackward;
-            @Backward.canceled -= instance.OnBackward;
+            @RightClick.started -= instance.OnRightClick;
+            @RightClick.performed -= instance.OnRightClick;
+            @RightClick.canceled -= instance.OnRightClick;
+            @LeftClick.started -= instance.OnLeftClick;
+            @LeftClick.performed -= instance.OnLeftClick;
+            @LeftClick.canceled -= instance.OnLeftClick;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -475,7 +475,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
-        void OnForward(InputAction.CallbackContext context);
-        void OnBackward(InputAction.CallbackContext context);
+        void OnRightClick(InputAction.CallbackContext context);
+        void OnLeftClick(InputAction.CallbackContext context);
     }
 }

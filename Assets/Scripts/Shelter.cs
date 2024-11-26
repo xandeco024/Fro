@@ -35,7 +35,7 @@ public class Shelter : MonoBehaviour
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
+        player = FindFirstObjectByType<Player>();
         currBatteryKWh = maxBatteryKWh;
     }
 
@@ -43,7 +43,6 @@ public class Shelter : MonoBehaviour
     void Update()
     {
         WirelessCharge();
-        HandleBattery();
     }
 
     void WirelessCharge()
@@ -66,7 +65,7 @@ public class Shelter : MonoBehaviour
             transfer = Mathf.Min(transfer, remainingWh * 3600f);
 
             // Carrega o robô com a energia calculada
-            player.Charge(transfer);
+            // player.ChargeWs(transfer);
 
             // Reduz a energia da base (converte Ws de volta para kWh)
             currBatteryKWh -= transfer / 3600f;

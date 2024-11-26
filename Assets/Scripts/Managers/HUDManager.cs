@@ -22,7 +22,7 @@ public class HUDManager : MonoBehaviour
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
+        player = FindFirstObjectByType<Player>();
         playerTools = player.GetComponent<PlayerTools>();
     }
 

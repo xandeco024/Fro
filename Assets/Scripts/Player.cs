@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Versioning;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -34,46 +35,28 @@ public class Player : MonoBehaviour
 
 
     [Header("Energy")]
-    private bool charging;
-    public bool Charging { get { return charging; } }
     [SerializeField] private float maxBatteryWh;
     public float MaxBatteryWh { get { return maxBatteryWh; } }
-    [SerializeField] private float currBatteryWh;
-    public float CurrBatteryWh { get { return currBatteryWh; }}
+    [SerializeField] private float currentBatteryWh;
+    public float CurrBatteryWh { get { return currentBatteryWh; }}
 
     //consumption
     [SerializeField] private int baseConsumptionWs;
     [SerializeField] private int walkingConsumptionWs;
     [SerializeField] private int runningConsumptionWs;
-    [SerializeField] private int jumpConsumptionWs;
-    private int currentConsumptionWs() {
-        int consumption = baseConsumptionWs;
-
-        if (isRunning)
-        {
-            consumption += runningConsumptionWs;
-        }
-
-        else if (isWalking)
-        {
-            consumption += walkingConsumptionWs;
-        }
-
-        if (isJumping)
-        {
-            consumption += jumpConsumptionWs;
-        }
-
-        return consumption;
-    }
-    public int CurrentConsumptionWs { get { return currentConsumptionWs(); } }
-    private bool uncharged;
+    [SerializeField] private int jumpConsumptionW;
+    private Dictionary<string, int> consumptionWsDict = new Dictionary<string, int>{
+        {"Base", 0}
+    };
+    public Dictionary<string, int> ConsumptionWsDict { get { return consumptionWsDict; } }
+    private float currentConsumptionWs;
+    public float CurrentConsumptionWs { get { return currentConsumptionWs; } }
 
 
-
-    [Header("Tools")]
-    [SerializeField] private float destroySpeed;
-    public float DestroySpeed { get { return destroySpeed; } }
+    private bool recharging;
+    public bool Recharging { get { return recharging; } }
+    private float rechargeRateWs;
+    public float RechargeRateWs { get { return rechargeRateWs; } }
 
     void OnEnable()
     {
@@ -99,13 +82,15 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        currBatteryWh = maxBatteryWh;
+        currentBatteryWh = maxBatteryWh;
+
+        consumptionWsDict["Base"] = baseConsumptionWs;
+        InvokeRepeating("HandleBattery", 1, 1);
     }
 
     void Update()
     {
         isGrounded = GroundCheck();
-        HandleBattery();
     }
 
     void FixedUpdate()
@@ -113,20 +98,41 @@ public class Player : MonoBehaviour
         Movement();
     }
 
-    void Movement()
-    {
-        float s = isRunning ? speed * 1.5f : speed;
-        s *= currBatteryWh <= 0 ? 0 : 1;
+        void Movement()
+        {
+            float s = isRunning ? speed * 1.5f : speed;
+            s *= currentBatteryWh <= 0 ? 0 : 1;
 
-        Vector2 move = new Vector2(moveInput.x, 0) * s;
-        rb.linearVelocity = new Vector2(move.x, rb.linearVelocity.y);
+            Vector2 move = new Vector2(moveInput.x, 0) * s;
+            rb.linearVelocity = new Vector2(move.x, rb.linearVelocity.y);
 
-        //flip sprite by changing scale
-        Flip(moveInput.x);
-    }
+            if (moveInput.x != 0)
+            {
+                if (isRunning)
+                {
+                    consumptionWsDict["Running"] = runningConsumptionWs;
+                    consumptionWsDict.Remove("Walking");
+                }
+                else
+                {
+                    consumptionWsDict["Walking"] = walkingConsumptionWs;
+                    consumptionWsDict.Remove("Running");
+                }
+            }
+            else
+            {
+                consumptionWsDict.Remove("Walking");
+                consumptionWsDict.Remove("Running");
+            }
+
+            //flip sprite by changing scale
+            Flip(moveInput.x);
+        }
 
     void Flip(float xInput)
     {
+        if (currentBatteryWh <= 0) return;
+
         if (xInput > 0 && transform.localScale.x < 0)
         {
             transform.localScale = new Vector3(1, 1, 1);
@@ -139,38 +145,49 @@ public class Player : MonoBehaviour
 
     #region Energy
 
-    public void ConsumeEnergyWS(int amountWs)
+    public void ConsumeEnergyW(float amountW)
     {
-        currBatteryWh -= amountWs / 3600;
+        currentBatteryWh -= amountW;
     }
 
-    public void ConsumeEnergyW(int amountW)
+    public void RechargeW(float amountW)
     {
-        currBatteryWh -= amountW;
+        currentBatteryWh = Mathf.Min(currentBatteryWh + amountW, maxBatteryWh);
     }
 
-    public void Charge(float amountWs)
+    public void AddConsumption(string key, int value)
     {
-        float charge = amountWs / 3600;
-        currBatteryWh = Mathf.Min(currBatteryWh + charge, maxBatteryWh);
+        consumptionWsDict[key] = value;
+    }
+
+    public void RemoveConsumption(string key)
+    {
+        consumptionWsDict.Remove(key);
     }
 
     void HandleBattery()
     {
-        float consumptionWh = (currentConsumptionWs() * Time.deltaTime / 3600) * 60;
-        
-        currBatteryWh -= consumptionWh;
+        currentConsumptionWs = 0;
 
-        if (currBatteryWh < 0 && !uncharged)
+        foreach (var item in consumptionWsDict)
         {
-            uncharged = true;
-            currBatteryWh = 0;
+            currentConsumptionWs += item.Value;
         }
 
-
-        if (uncharged)
+        if (currentBatteryWh > 0)
         {
-            Debug.Log("You are dead");
+            ConsumeEnergyW(currentConsumptionWs / 3600 * 60);
+        }
+
+        else
+        {
+            Debug.Log("dead");
+            CancelInvoke("HandleBattery");
+        }
+
+        if (recharging)
+        {
+            RechargeW(rechargeRateWs);
         }
     }
 
@@ -180,9 +197,10 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        if (isGrounded && currBatteryWh > jumpConsumptionWs)
+        if (isGrounded && currentBatteryWh > jumpConsumptionW)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse);
+            ConsumeEnergyW(jumpConsumptionW);
         }
     }
 

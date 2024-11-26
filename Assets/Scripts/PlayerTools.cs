@@ -7,8 +7,11 @@ using UnityEngine;
 public class PlayerTools : MonoBehaviour
 {
     private Player player;
+    private InputActions inputActions;
     private TilemapManager tilemapManager;
     private Tile selectedTile;
+
+
 
     [SerializeField] private float toolsRange;
     private int currentToolIndex = 1;
@@ -16,12 +19,22 @@ public class PlayerTools : MonoBehaviour
     private bool selectingTool;
     public bool SelectingTool { get { return selectingTool; } }
 
-    [Header("Destroy")]
-    [SerializeField] private bool hasDestroyTool;
-    [SerializeField] private float destroyDamage;
 
-    [Header("Build")]
-    [SerializeField] private bool hasBuildTool;
+
+    private bool rightClick;
+    private bool lastRightClick;
+    private bool leftClick;
+    private bool lastLeftClick;
+
+
+
+    [Header("Terrain")]
+    [SerializeField] private bool hasTerrainTool;
+    [SerializeField] private float destroyDamage;
+    [SerializeField] private int destroyConsumptionWs;
+    [SerializeField] private int buildConsumptionWs;
+
+
 
     [Header("Scanner")]
     [SerializeField] private bool hasScannerTool;
@@ -29,18 +42,43 @@ public class PlayerTools : MonoBehaviour
     [SerializeField] private GameObject infoPanelPrefab;
     private InfoPanel currentInfoPanel;
 
+
+
     [Header("Watering")]
     [SerializeField] private bool hasWateringTool;
     [SerializeField] private int tankCapacity;
     [SerializeField] private int tankLevel;
+    [SerializeField] private int wateringConsumptionWs;
+
+
+
+    void OnEnable()
+    {
+        if (inputActions == null)
+        {
+            inputActions = new InputActions();
+
+            inputActions.Player.RightClick.started += ctx => rightClick = true;
+            inputActions.Player.RightClick.canceled += ctx => rightClick = false;
+
+            inputActions.Player.LeftClick.started += ctx => leftClick = true;
+            inputActions.Player.LeftClick.canceled += ctx => leftClick = false;
+        }
+
+        inputActions.Enable();
+    }
+
+    void OnDisable()
+    {
+        inputActions.Disable();
+    }
 
     void Start()
     {
         player = GetComponent<Player>();
-        tilemapManager = FindObjectOfType<TilemapManager>();
+        tilemapManager = FindFirstObjectByType<TilemapManager>();
         tankLevel = tankCapacity;
     }
-
 
     void Update()
     {
@@ -70,6 +108,9 @@ public class PlayerTools : MonoBehaviour
                     break;
             }
         }
+
+        lastRightClick = rightClick;
+        lastLeftClick = leftClick;
     }
 
     private bool CanUseTool()
@@ -94,26 +135,29 @@ public class PlayerTools : MonoBehaviour
     private int UpdateSelectedTool()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) return 1;
-        if (Input.GetKeyDown(KeyCode.Alpha2) && hasDestroyTool) return 2;
-        if (Input.GetKeyDown(KeyCode.Alpha3) && hasBuildTool) return 3;
+        if (Input.GetKeyDown(KeyCode.Alpha2) && hasTerrainTool) return 2;
+        if (Input.GetKeyDown(KeyCode.Alpha3) && hasWateringTool) return 3;
 
         return currentToolIndex;
     }
 
     public void HandleTerrainTool()
     {
-        if (Input.GetMouseButton(0))
+        if (leftClick)
         {
             selectedTile.Damage(destroyDamage * Time.deltaTime);
             if (selectedTile.CurrentHealth <= 0)
             {
                 tilemapManager.DestroyTile(selectedTile.Coordinate);
             }
+
+            player.AddConsumption("TerrainTool", destroyConsumptionWs);
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (!leftClick && lastLeftClick)
         {
             selectedTile.Reset();
+            player.RemoveConsumption("TerrainTool");
         }
     }
 
@@ -150,7 +194,7 @@ public class PlayerTools : MonoBehaviour
 
     private void HandleWateringTool()
     {
-        if (Input.GetMouseButton(0))
+        if (leftClick)
         {
             if (tankLevel > 0)
             {
@@ -161,6 +205,13 @@ public class PlayerTools : MonoBehaviour
             {
                 Debug.Log("Tank is empty!");
             }
+
+            player.AddConsumption("WateringTool", wateringConsumptionWs);
+        }
+
+        if (!leftClick && lastLeftClick)
+        {
+            player.RemoveConsumption("WateringTool");
         }
     }
 
