@@ -4,7 +4,7 @@ using System.Runtime.Versioning;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Electrical
 {
     [Header("Components")]
     InputActions inputActions;
@@ -35,28 +35,11 @@ public class Player : MonoBehaviour
 
 
     [Header("Energy")]
-    [SerializeField] private float maxBatteryWh;
-    public float MaxBatteryWh { get { return maxBatteryWh; } }
-    [SerializeField] private float currentBatteryWh;
-    public float CurrBatteryWh { get { return currentBatteryWh; }}
-
     //consumption
     [SerializeField] private int baseConsumptionWs;
     [SerializeField] private int walkingConsumptionWs;
     [SerializeField] private int runningConsumptionWs;
     [SerializeField] private int jumpConsumptionW;
-    private Dictionary<string, int> consumptionWsDict = new Dictionary<string, int>{
-        {"Base", 0}
-    };
-    public Dictionary<string, int> ConsumptionWsDict { get { return consumptionWsDict; } }
-    private float currentConsumptionWs;
-    public float CurrentConsumptionWs { get { return currentConsumptionWs; } }
-
-
-    private bool recharging;
-    public bool Recharging { get { return recharging; } }
-    private float rechargeRateWs;
-    public float RechargeRateWs { get { return rechargeRateWs; } }
 
     void OnEnable()
     {
@@ -79,17 +62,16 @@ public class Player : MonoBehaviour
         inputActions.Disable();
     }
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
         rb = GetComponent<Rigidbody2D>();
-        currentBatteryWh = maxBatteryWh;
-
-        consumptionWsDict["Base"] = baseConsumptionWs;
         InvokeRepeating("HandleBattery", 1, 1);
     }
 
-    void Update()
+    public override void Update()
     {
+        base.Update();
         isGrounded = GroundCheck();
     }
 
@@ -98,36 +80,36 @@ public class Player : MonoBehaviour
         Movement();
     }
 
-        void Movement()
+    void Movement()
+    {
+        float s = isRunning ? speed * 1.5f : speed;
+        s *= currentBatteryWh <= 0 ? 0 : 1;
+
+        Vector2 move = new Vector2(moveInput.x, 0) * s;
+        rb.linearVelocity = new Vector2(move.x, rb.linearVelocity.y);
+
+        if (moveInput.x != 0)
         {
-            float s = isRunning ? speed * 1.5f : speed;
-            s *= currentBatteryWh <= 0 ? 0 : 1;
-
-            Vector2 move = new Vector2(moveInput.x, 0) * s;
-            rb.linearVelocity = new Vector2(move.x, rb.linearVelocity.y);
-
-            if (moveInput.x != 0)
+            if (isRunning)
             {
-                if (isRunning)
-                {
-                    consumptionWsDict["Running"] = runningConsumptionWs;
-                    consumptionWsDict.Remove("Walking");
-                }
-                else
-                {
-                    consumptionWsDict["Walking"] = walkingConsumptionWs;
-                    consumptionWsDict.Remove("Running");
-                }
+                consumptionWsDict["Running"] = runningConsumptionWs;
+                consumptionWsDict.Remove("Walking");
             }
             else
             {
-                consumptionWsDict.Remove("Walking");
+                consumptionWsDict["Walking"] = walkingConsumptionWs;
                 consumptionWsDict.Remove("Running");
             }
-
-            //flip sprite by changing scale
-            Flip(moveInput.x);
         }
+        else
+        {
+            consumptionWsDict.Remove("Walking");
+            consumptionWsDict.Remove("Running");
+        }
+
+        //flip sprite by changing scale
+        Flip(moveInput.x);
+    }
 
     void Flip(float xInput)
     {
@@ -142,56 +124,6 @@ public class Player : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
         }
     }
-
-    #region Energy
-
-    public void ConsumeEnergyW(float amountW)
-    {
-        currentBatteryWh -= amountW;
-    }
-
-    public void RechargeW(float amountW)
-    {
-        currentBatteryWh = Mathf.Min(currentBatteryWh + amountW, maxBatteryWh);
-    }
-
-    public void AddConsumption(string key, int value)
-    {
-        consumptionWsDict[key] = value;
-    }
-
-    public void RemoveConsumption(string key)
-    {
-        consumptionWsDict.Remove(key);
-    }
-
-    void HandleBattery()
-    {
-        currentConsumptionWs = 0;
-
-        foreach (var item in consumptionWsDict)
-        {
-            currentConsumptionWs += item.Value;
-        }
-
-        if (currentBatteryWh > 0)
-        {
-            ConsumeEnergyW(currentConsumptionWs / 3600 * 60);
-        }
-
-        else
-        {
-            Debug.Log("dead");
-            CancelInvoke("HandleBattery");
-        }
-
-        if (recharging)
-        {
-            RechargeW(rechargeRateWs);
-        }
-    }
-
-    #endregion
 
     #region Movement
 

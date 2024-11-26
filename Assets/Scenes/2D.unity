@@ -4593,7 +4593,7 @@ MonoBehaviour:
   baseConsumptionWs: 5
   walkingConsumptionWs: 10
   runningConsumptionWs: 20
-  jumpConsumptionW: 0
+  jumpConsumptionW: 15
 --- !u!114 &1650628969
 MonoBehaviour:
   m_ObjectHideFlags: 0
