@@ -119,7 +119,7 @@ public class Player : MonoBehaviour
         s *= currBatteryWh <= 0 ? 0 : 1;
 
         Vector2 move = new Vector2(moveInput.x, 0) * s;
-        rb.velocity = new Vector2(move.x, rb.velocity.y);
+        rb.linearVelocity = new Vector2(move.x, rb.linearVelocity.y);
 
         //flip sprite by changing scale
         Flip(moveInput.x);
