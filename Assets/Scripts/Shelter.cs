@@ -43,6 +43,6 @@ public class Shelter : MonoBehaviour
 
         //     // Reduz a energia da base (converte Ws de volta para kWh)
         //     currBatteryKWh -= transfer / 3600f;
-        }
+        // }
     }
 }
