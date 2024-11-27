@@ -4419,6 +4419,7 @@ GameObject:
   - component: {fileID: 1650628966}
   - component: {fileID: 1650628968}
   - component: {fileID: 1650628969}
+  - component: {fileID: 1650628970}
   m_Layer: 0
   m_Name: "2D P\xE1dua"
   m_TagString: Player
@@ -4581,6 +4582,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dbd31efd9304824ba6291ee365e5ba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxBatteryWh: 500
+  currentBatteryWh: 0
+  baseConsumptionWs: 5
+  canCharge: 0
+  chargeRateWs: 0
+  canWirelessCharge: 0
+  wirelessChargeRateWs: 0
+  wirelessChargeDistance: 0
   speed: 7
   jumpForce: 14
   rayOffset: -1
@@ -4588,8 +4597,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  maxBatteryWh: 500
-  currentBatteryWh: 0
   baseConsumptionWs: 5
   walkingConsumptionWs: 10
   runningConsumptionWs: 20
@@ -4617,6 +4624,28 @@ MonoBehaviour:
   tankCapacity: 10000
   tankLevel: 0
   wateringConsumptionWs: 10
+--- !u!95 &1650628970
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650628963}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: df3d0aa6849726b4c871602527cec1a9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1708554391
 GameObject:
   m_ObjectHideFlags: 0

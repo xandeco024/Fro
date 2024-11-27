@@ -16,6 +16,7 @@ public class Electrical : MonoBehaviour
         {"Base", 0}
     };
     protected float currentConsumptionWs;
+    public float CurrentConsumptionWs { get { return currentConsumptionWs; } }
     [SerializeField] private int baseConsumptionWs;
 
 

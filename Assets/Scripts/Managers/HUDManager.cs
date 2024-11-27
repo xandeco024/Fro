@@ -34,9 +34,9 @@ public class HUDManager : MonoBehaviour
 
     void HandleEnergyBar()
     {
-        energyBar.fillAmount = player.CurrBatteryWh / player.MaxBatteryWh;
+        energyBar.fillAmount = player.CurrentBatteryWh / player.MaxBatteryWh;
         consumptionText.text = player.CurrentConsumptionWs.ToString() + " Ws";
-        batteryText.text = Mathf.RoundToInt(player.CurrBatteryWh).ToString() + " Wh / " + player.MaxBatteryWh.ToString() + " Wh";
+        batteryText.text = Mathf.RoundToInt(player.CurrentBatteryWh).ToString() + " Wh / " + player.MaxBatteryWh.ToString() + " Wh";
     }
 
     void HandleTools()
