@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class Electrical : MonoBehaviour
 {
-    private CircleCollider2D circleCollider;
-
-    [SerializeField] private int timeScaleFactor = 60;
+    [SerializeField] protected int timeScaleFactor = 60;
 
     //about its battery
     [Header("Energy")]
@@ -44,17 +42,12 @@ public class Electrical : MonoBehaviour
 
     public virtual void Start()
     {
-        if (canWirelessCharge) circleCollider = GetComponent<CircleCollider2D>();
-
         currentBatteryWh = maxBatteryWh;
-
         consumptionWsDict["Base"] = baseConsumptionWs;
     }
 
     public virtual void Update()
     {
-        currentConsumptionWs = 0;
-
         if (canWirelessCharge)
         {
             devicesToWirelessCharge.Clear();
@@ -78,19 +71,27 @@ public class Electrical : MonoBehaviour
                     {
                         if (currentBatteryWh > 0)
                         {                            
-                            device.RechargeWs(wirelessChargeRateWs * Time.deltaTime);
+                            device.RechargeWs(wirelessChargeRateWs);
                             //Debug.Log("devia ter reccaregado " + device.gameObject.name + " com " + wirelessChargeRateWs);
-                            ConsumeEnergyWs(wirelessChargeRateWs);
+                            AddConsumptionWs("WirelessCharge", wirelessChargeRateWs);
                         }
                     }
                 }
             }
         }
 
-        foreach (KeyValuePair<string, int> consumption in consumptionWsDict)
+        HandleConsumption();
+    }
+
+
+
+    public virtual void HandleConsumption()
+    {
+        currentConsumptionWs = 0;
+
+        foreach (var consumption in consumptionWsDict.Values)
         {
-            currentConsumptionWs += consumption.Value;
-            Debug.Log(consumption.Key + " " + consumption.Value);
+            currentConsumptionWs += consumption;
         }
 
         if (currentConsumptionWs > 0)
@@ -99,14 +100,27 @@ public class Electrical : MonoBehaviour
         }
     }
 
-
-
     public virtual void ConsumeEnergyWs(float amountWs)
     {
-        if (currentBatteryWh - amountWs >= 0)
+        float amountW = amountWs / 3600 * timeScaleFactor * Time.deltaTime;
+
+        if (currentBatteryWh - amountW >= 0)
         {
-            currentBatteryWh -= amountWs / 3600 *  timeScaleFactor * Time.deltaTime;
-            // Debug.Log("Consumed " + amountWs + " W");
+            currentBatteryWh -= amountW;
+        }
+        else
+        {
+            currentBatteryWh = 0;
+        }
+    }
+
+    public virtual void ConsumeEnergyW(int amountW)
+    {
+        amountW = amountW / 3600 * timeScaleFactor;
+
+        if (currentBatteryWh - amountW >= 0)
+        {
+            currentBatteryWh -= amountW;
         }
         else
         {
@@ -127,9 +141,11 @@ public class Electrical : MonoBehaviour
 
     public virtual void RechargeWs(float amountWs)
     {
-        if (currentBatteryWh + amountWs <= maxBatteryWh)
+        float amountW = amountWs / 3600 * timeScaleFactor * Time.deltaTime;
+
+        if (currentBatteryWh + amountW <= maxBatteryWh)
         {
-            currentBatteryWh += amountWs / 3600 * timeScaleFactor * Time.deltaTime;
+            currentBatteryWh += amountW;
         }
         else
         {

@@ -87,10 +87,10 @@ public class PlayerTools : MonoBehaviour
 
         HandleToolsPanel();
 
-        if (hasScannerTool) HandleScannerTool();
-
         if (CanUseTool())
         {
+
+            if (hasScannerTool) HandleScannerTool();
 
             switch (currentToolIndex)
             {
@@ -146,9 +146,15 @@ public class PlayerTools : MonoBehaviour
     public void HandleTerrainTool()
     {
 
-        if (leftClick)
+        if (Input.GetMouseButtonDown(0))
         {
-            player.ConsumeEnergyWs(destroyConsumptionWs);
+            player.AddConsumptionWs("DestroyTool", destroyConsumptionWs);
+        }
+
+
+
+        if (Input.GetMouseButton(0))
+        {
             selectedTile.Damage(destroyDamage * Time.deltaTime);
             if (selectedTile.CurrentHealth <= 0)
             {
@@ -156,9 +162,10 @@ public class PlayerTools : MonoBehaviour
             }
         }
 
-        if (!leftClick && lastLeftClick)
+        if (Input.GetMouseButtonUp(0))
         {
             selectedTile.Reset();
+            player.RemoveConsumptionWs("DestroyTool");
         }
     }
 
@@ -169,7 +176,6 @@ public class PlayerTools : MonoBehaviour
             if (currentInfoPanel != null)
             {
                 Destroy(currentInfoPanel.gameObject);
-                player.RemoveConsumptionWs("ST");
             }
 
             lastScannedTile = selectedTile;
@@ -182,7 +188,6 @@ public class PlayerTools : MonoBehaviour
                 selectedTile.LifeSupport,
                 selectedTile.Wetness);
             currentInfoPanel.transform.SetParent(GameObject.Find("HUD").transform);
-            player.AddConsumptionWs("ST", scannerConsumptionWs);
         }
         else if (lastScannedTile == selectedTile && currentInfoPanel != null)
         {
@@ -196,7 +201,6 @@ public class PlayerTools : MonoBehaviour
         else if (currentInfoPanel != null && selectedTile == null)
         {
             Destroy(currentInfoPanel.gameObject);
-            player.RemoveConsumptionWs("ST");
         }
     }
 
@@ -204,15 +208,15 @@ public class PlayerTools : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            player.AddConsumptionWs("WT", wateringConsumptionWs);
+            player.AddConsumptionWs("WateringTool", wateringConsumptionWs);
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            player.RemoveConsumptionWs("WT");
+            player.RemoveConsumptionWs("WateringTool");
         }
 
-        if (Input.GetMouseButton(1) && tankLevel > 0)
+        if (Input.GetMouseButton(0) && tankLevel > 0)
         {
             if (tankLevel > 0)
             {

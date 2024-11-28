@@ -7,7 +7,6 @@ using UnityEngine;
 public class Player : Electrical
 {
     [Header("Components")]
-    InputActions inputActions;
     private Rigidbody2D rb;
     private Animator animator;
 
@@ -41,26 +40,7 @@ public class Player : Electrical
     [SerializeField] private int runningConsumptionWs;
     [SerializeField] private int jumpConsumptionW;
 
-    void OnEnable()
-    {
-        if (inputActions == null)
-        {
-            inputActions = new InputActions();
 
-            inputActions.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-            inputActions.Player.Jump.performed += ctx => Jump();
-
-            inputActions.Player.Run.started += ctx => isRunning = true;
-            inputActions.Player.Run.canceled += ctx => isRunning = false;
-        }
-
-        inputActions.Enable();
-    }
-
-    void OnDisable()
-    {
-        inputActions.Disable();
-    }
 
     public override void Start()
     {
@@ -74,6 +54,11 @@ public class Player : Electrical
         base.Update();
         isGrounded = GroundCheck();
         Animation();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
     }
 
     void FixedUpdate()
@@ -85,11 +70,15 @@ public class Player : Electrical
     {
         if (currentBatteryWh > 0)
         {
-            if (isWalking || isRunning && moveInput.x != 0) animator.SetBool("walking", true);
+            if (isWalking || isRunning && moveInput.magnitude > 0) animator.SetBool("walking", true);
             else animator.SetBool("walking", false);
             //if running, set the current animation speed to 1.5
             if (isRunning) animator.SetFloat("speed", 1.5f);
             else animator.SetFloat("speed", 1);
+        }
+        else 
+        {
+            animator.SetBool("walking", false);
         }
     }
 
@@ -97,29 +86,39 @@ public class Player : Electrical
 
     void Movement()
     {
+        moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), 0);
+
+        if (moveInput.magnitude > 0)
+        {
+            isRunning = Input.GetKey(KeyCode.LeftShift);
+
+            if (isRunning)
+            {
+                
+                AddConsumptionWs("Running", runningConsumptionWs);
+                RemoveConsumptionWs("Walking");
+                isWalking = false;
+            }
+            else
+            {
+                AddConsumptionWs("Walking", walkingConsumptionWs);
+                RemoveConsumptionWs("Running");
+                isWalking = true;
+            }
+        }
+        else
+        {
+            RemoveConsumptionWs("Walking");
+            RemoveConsumptionWs("Running");
+            isWalking = false;
+        }
+
         float s = isRunning ? speed * 1.5f : speed;
         s *= currentBatteryWh <= 0 ? 0 : 1;
 
         Vector2 move = new Vector2(moveInput.x, 0) * s;
         rb.linearVelocity = new Vector2(move.x, rb.linearVelocity.y);
 
-        if (moveInput.x != 0)
-        {
-            if (isRunning)
-            {
-                isWalking = false;
-            }
-            else
-            {
-                isWalking = true;
-            }
-        }
-        else
-        {
-            isWalking = false;
-        }
-
-        //flip sprite by changing scale
         Flip(moveInput.x);
     }
 
@@ -141,9 +140,10 @@ public class Player : Electrical
 
     private void Jump()
     {
-        if (isGrounded && currentBatteryWh > jumpConsumptionW)
+        if (isGrounded && currentBatteryWh > jumpConsumptionW / 3600 * timeScaleFactor)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse);
+            ConsumeEnergyW(jumpConsumptionW);
         }
     }
 
