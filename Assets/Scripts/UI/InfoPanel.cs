@@ -26,9 +26,9 @@ public class InfoPanel : MonoBehaviour
     public void UpdatePanel(string title, int temperature, int luminosity, int lifeSupport, int wetness)
     {
         titleText.text = title;
-        temperatureText.text = "- temperature: " + temperature + "°C";
-        luminosityText.text = "- luminosity: " + luminosity + " lumens";
-        lifeSupportText.text = "- life Support: " + lifeSupport;
-        wetnessText.text = "- wetness: " + wetness;   
+        temperatureText.text = "- temperatura: " + temperature + "°C";
+        luminosityText.text = "- luminosidade: " + luminosity + " lumens";
+        lifeSupportText.text = "- suporte à vida: " + lifeSupport;
+        wetnessText.text = "- umidade: " + wetness;   
     }
 }

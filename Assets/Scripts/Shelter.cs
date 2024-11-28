@@ -2,21 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shelter : MonoBehaviour
+public class Shelter : Electrical
 {
     private Player player;
 
 
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
         player = FindFirstObjectByType<Player>();
     }
 
     // Update is called once per frame
-    void Update()
+    public override void Update()
     {
-        WirelessCharge();
+        base.Update();
     }
 
     void WirelessCharge()

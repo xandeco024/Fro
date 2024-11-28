@@ -9,6 +9,7 @@ public class Player : Electrical
     [Header("Components")]
     InputActions inputActions;
     private Rigidbody2D rb;
+    private Animator animator;
 
 
 
@@ -36,7 +37,6 @@ public class Player : Electrical
 
     [Header("Energy")]
     //consumption
-    [SerializeField] private int baseConsumptionWs;
     [SerializeField] private int walkingConsumptionWs;
     [SerializeField] private int runningConsumptionWs;
     [SerializeField] private int jumpConsumptionW;
@@ -66,19 +66,34 @@ public class Player : Electrical
     {
         base.Start();
         rb = GetComponent<Rigidbody2D>();
-        InvokeRepeating("HandleBattery", 1, 1);
+        animator = GetComponent<Animator>();
     }
 
     public override void Update()
     {
         base.Update();
         isGrounded = GroundCheck();
+        Animation();
     }
 
     void FixedUpdate()
     {
         Movement();
     }
+
+    void Animation()
+    {
+        if (currentBatteryWh > 0)
+        {
+            if (isWalking || isRunning && moveInput.x != 0) animator.SetBool("walking", true);
+            else animator.SetBool("walking", false);
+            //if running, set the current animation speed to 1.5
+            if (isRunning) animator.SetFloat("speed", 1.5f);
+            else animator.SetFloat("speed", 1);
+        }
+    }
+
+    #region Movement
 
     void Movement()
     {
@@ -92,19 +107,16 @@ public class Player : Electrical
         {
             if (isRunning)
             {
-                consumptionWsDict["Running"] = runningConsumptionWs;
-                consumptionWsDict.Remove("Walking");
+                isWalking = false;
             }
             else
             {
-                consumptionWsDict["Walking"] = walkingConsumptionWs;
-                consumptionWsDict.Remove("Running");
+                isWalking = true;
             }
         }
         else
         {
-            consumptionWsDict.Remove("Walking");
-            consumptionWsDict.Remove("Running");
+            isWalking = false;
         }
 
         //flip sprite by changing scale
@@ -125,14 +137,13 @@ public class Player : Electrical
         }
     }
 
-    #region Movement
+
 
     private void Jump()
     {
         if (isGrounded && currentBatteryWh > jumpConsumptionW)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse);
-            ConsumeEnergyW(jumpConsumptionW);
         }
     }
 

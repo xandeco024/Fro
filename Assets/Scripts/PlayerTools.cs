@@ -38,6 +38,7 @@ public class PlayerTools : MonoBehaviour
 
     [Header("Scanner")]
     [SerializeField] private bool hasScannerTool;
+    [SerializeField] private int scannerConsumptionWs;
     private Tile lastScannedTile;
     [SerializeField] private GameObject infoPanelPrefab;
     private InfoPanel currentInfoPanel;
@@ -86,9 +87,10 @@ public class PlayerTools : MonoBehaviour
 
         HandleToolsPanel();
 
+        if (hasScannerTool) HandleScannerTool();
+
         if (CanUseTool())
         {
-            if (hasScannerTool) HandleScannerTool();
 
             switch (currentToolIndex)
             {
@@ -143,21 +145,20 @@ public class PlayerTools : MonoBehaviour
 
     public void HandleTerrainTool()
     {
+
         if (leftClick)
         {
+            player.ConsumeEnergyWs(destroyConsumptionWs);
             selectedTile.Damage(destroyDamage * Time.deltaTime);
             if (selectedTile.CurrentHealth <= 0)
             {
                 tilemapManager.DestroyTile(selectedTile.Coordinate);
             }
-
-            player.AddConsumption("TerrainTool", destroyConsumptionWs);
         }
 
         if (!leftClick && lastLeftClick)
         {
             selectedTile.Reset();
-            player.RemoveConsumption("TerrainTool");
         }
     }
 
@@ -168,6 +169,7 @@ public class PlayerTools : MonoBehaviour
             if (currentInfoPanel != null)
             {
                 Destroy(currentInfoPanel.gameObject);
+                player.RemoveConsumptionWs("ST");
             }
 
             lastScannedTile = selectedTile;
@@ -180,6 +182,7 @@ public class PlayerTools : MonoBehaviour
                 selectedTile.LifeSupport,
                 selectedTile.Wetness);
             currentInfoPanel.transform.SetParent(GameObject.Find("HUD").transform);
+            player.AddConsumptionWs("ST", scannerConsumptionWs);
         }
         else if (lastScannedTile == selectedTile && currentInfoPanel != null)
         {
@@ -190,11 +193,26 @@ public class PlayerTools : MonoBehaviour
                 selectedTile.LifeSupport,
                 selectedTile.Wetness);
         }
+        else if (currentInfoPanel != null && selectedTile == null)
+        {
+            Destroy(currentInfoPanel.gameObject);
+            player.RemoveConsumptionWs("ST");
+        }
     }
 
     private void HandleWateringTool()
     {
-        if (leftClick)
+        if (Input.GetMouseButtonDown(0))
+        {
+            player.AddConsumptionWs("WT", wateringConsumptionWs);
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            player.RemoveConsumptionWs("WT");
+        }
+
+        if (Input.GetMouseButton(1) && tankLevel > 0)
         {
             if (tankLevel > 0)
             {
@@ -206,12 +224,6 @@ public class PlayerTools : MonoBehaviour
                 Debug.Log("Tank is empty!");
             }
 
-            player.AddConsumption("WateringTool", wateringConsumptionWs);
-        }
-
-        if (!leftClick && lastLeftClick)
-        {
-            player.RemoveConsumption("WateringTool");
         }
     }
 

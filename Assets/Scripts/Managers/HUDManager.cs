@@ -8,8 +8,7 @@ public class HUDManager : MonoBehaviour
     private PlayerTools playerTools;
 
     [SerializeField] private Image energyBar;
-    [SerializeField] private TextMeshProUGUI consumptionText;
-    [SerializeField] private TextMeshProUGUI batteryText;
+    [SerializeField] private TextMeshProUGUI energyBarText;
 
 
 
@@ -19,6 +18,7 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private Image handToolImage;
     [SerializeField] private Image terrainToolImage;
     [SerializeField] private Image wateringToolImage;
+    [SerializeField] private Image toolHighlight;
 
     void Start()
     {
@@ -35,8 +35,7 @@ public class HUDManager : MonoBehaviour
     void HandleEnergyBar()
     {
         energyBar.fillAmount = player.CurrentBatteryWh / player.MaxBatteryWh;
-        consumptionText.text = player.CurrentConsumptionWs.ToString() + " Ws";
-        batteryText.text = Mathf.RoundToInt(player.CurrentBatteryWh).ToString() + " Wh / " + player.MaxBatteryWh.ToString() + " Wh";
+        energyBarText.text = player.CurrentConsumptionWs.ToString() + " Ws" + "     " + Mathf.RoundToInt(player.CurrentBatteryWh).ToString() + " Wh / " + player.MaxBatteryWh.ToString() + " Wh";
     }
 
     void HandleTools()
@@ -44,23 +43,37 @@ public class HUDManager : MonoBehaviour
         switch (playerTools.CurrentToolIndex)
         {
             case 1:
-                //currentToolImage.sprite = handToolImage.sprite;
-                currentToolImage.color = handToolImage.color;
+                currentToolImage.sprite = handToolImage.sprite;
                 break;
 
             case 2:
-                // currentToolImage.sprite = terrainToolImage.sprite;
-                currentToolImage.color = terrainToolImage.color;
+                currentToolImage.sprite = terrainToolImage.sprite;
                 break;
 
             case 3:
-                // currentToolImage.sprite = wateringToolImage.sprite;
-                currentToolImage.color = wateringToolImage.color;
+                currentToolImage.sprite = wateringToolImage.sprite;
                 break;
         }
 
         if (playerTools.SelectingTool && !toolsPanelActive) ToggleToolsPanel(true);
         else if (!playerTools.SelectingTool && toolsPanelActive) ToggleToolsPanel(false);
+        if (playerTools.SelectingTool) 
+        {
+            switch (playerTools.CurrentToolIndex)
+            {
+                case 1:
+                    toolHighlight.rectTransform.anchoredPosition = handToolImage.rectTransform.anchoredPosition;
+                    break;
+
+                case 2:
+                    toolHighlight.rectTransform.anchoredPosition = terrainToolImage.rectTransform.anchoredPosition;
+                    break;
+
+                case 3:
+                    toolHighlight.rectTransform.anchoredPosition = wateringToolImage.rectTransform.anchoredPosition;
+                    break;
+            }
+        }
     }
 
     void ToggleToolsPanel(bool state)
@@ -69,5 +82,6 @@ public class HUDManager : MonoBehaviour
         handToolImage.gameObject.SetActive(state);
         terrainToolImage.gameObject.SetActive(state);
         wateringToolImage.gameObject.SetActive(state);
+        toolHighlight.gameObject.SetActive(state);
     }
 }
