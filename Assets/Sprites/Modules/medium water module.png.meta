@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: de3fe7eb5a2bb144f80a5bbba6aab03f
+guid: 0e1683c9201ab5b4caefa9a1af45393c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2342126889942523218
-    second: Shelter_0
+      213: -6901288340335948041
+    second: medium water module_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shelter_0
+      name: medium water module_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 15
-        width: 98
-        height: 82
+        x: 0
+        y: 1
+        width: 32
+        height: 56
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 25d1aed4ff7e08020800000000000000
-      internalID: 2342126889942523218
+      spriteID: 7fe0bbda1d2b930a0800000000000000
+      internalID: -6901288340335948041
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Shelter_0: 2342126889942523218
+      medium water module_0: -6901288340335948041
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

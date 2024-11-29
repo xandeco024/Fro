@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: de3fe7eb5a2bb144f80a5bbba6aab03f
+guid: f11aee1495d7bd64a9a31156ac5ca1b3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2342126889942523218
-    second: Shelter_0
+      213: -7254911277462762709
+    second: big slot_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shelter_0
+      name: big slot_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 15
-        width: 98
-        height: 82
+        x: 7
+        y: 7
+        width: 50
+        height: 50
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 25d1aed4ff7e08020800000000000000
-      internalID: 2342126889942523218
+      spriteID: b2b4bdd91a0615b90800000000000000
+      internalID: -7254911277462762709
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Shelter_0: 2342126889942523218
+      big slot_0: -7254911277462762709
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

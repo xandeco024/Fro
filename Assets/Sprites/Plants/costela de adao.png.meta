@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: de3fe7eb5a2bb144f80a5bbba6aab03f
+guid: 7261111d186562d4099a092671d2b33e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2342126889942523218
-    second: Shelter_0
+      213: -7244381681542958189
+    second: costela de adao_0
+  - first:
+      213: -1210963344092129959
+    second: costela de adao_1
+  - first:
+      213: 4228409957143623736
+    second: costela de adao_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +52,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -126,23 +132,67 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shelter_0
+      name: costela de adao_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 15
-        width: 98
-        height: 82
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 25d1aed4ff7e08020800000000000000
-      internalID: 2342126889942523218
+      spriteID: 393f8463e39c67b90800000000000000
+      internalID: -7244381681542958189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: costela de adao_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9559e57214bc13fe0800000000000000
+      internalID: -1210963344092129959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: costela de adao_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8383544f3745eaa30800000000000000
+      internalID: 4228409957143623736
       vertices: []
       indices: 
       edges: []
@@ -151,7 +201,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 09ebd1aca6033aa4fbe309f18ef29a55
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +211,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Shelter_0: 2342126889942523218
+      costela de adao_0: -7244381681542958189
+      costela de adao_1: -1210963344092129959
+      costela de adao_2: 4228409957143623736
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
