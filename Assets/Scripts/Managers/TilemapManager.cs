@@ -70,6 +70,11 @@ public class TilemapManager : MonoBehaviour
         }
 
         UpdateCrack(selectedTile);
+
+        foreach (var tile in tiles.Values)
+        {
+            tile.Update();
+        }
     }
 
     void UpdateCrack(Tile selectedTile)

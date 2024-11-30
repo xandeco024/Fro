@@ -6,14 +6,50 @@ public class Plant2 : MonoBehaviour
     protected Tile tile;
 
     [SerializeField] protected string plantName;
+    [SerializeField] protected string cientificName;
     [SerializeField] protected float growthRate;
-    private float growth;
-    [SerializeField] protected int waterConsumptionS;
+    protected int currentStage = 0;
+    private float health = 100;
+    private float growth= 0;
+    private bool dead = false;
+
+    [Header("Preferences")]
+    [SerializeField] protected IntRange preferredHumidity;
+    [SerializeField] protected IntRange tolerableHumidity;
+    [SerializeField] protected IntRange preferredTemperature;
+    [SerializeField] protected IntRange tolerableTemperature;
+    [SerializeField] protected IntRange preferredLight;
+    [SerializeField] protected IntRange tolerableLight;
+
+    [Header("Consumption")]
+    [SerializeField] protected float waterConsumptionS;
+
+
+
+    [System.Serializable]
+    public struct IntRange
+    {
+        public int min;
+        public int max;
+
+        public IntRange(int min, int max)
+        {
+            this.min = min;
+            this.max = max;
+        }
+
+        public bool Contains(int value)
+        {
+            return value >= min && value <= max;
+        }
+    }
 
     [System.Serializable]
     class PlantStage 
     {
-        public Sprite sprite;
+        public Sprite healthySprite;
+        public Sprite sickSprite;
+        public Sprite deadSprite;
         public int growthNeeded;
     }
 
@@ -35,26 +71,44 @@ public class Plant2 : MonoBehaviour
 
     void Grow()
     {
-        if (tile.Wetness > 0)
-        {
-            growth += growthRate * Time.deltaTime;
-            tile.Dry(waterConsumptionS * Time.deltaTime);
-
-            if (growth >= stages[stages.Length - 1].growthNeeded)
-            {
-                //plant is fully grown
-            }
-            else
-            {
-                for (int i = 0; i < stages.Length; i++)
-                {
-                    if (growth < stages[i].growthNeeded)
-                    {
-                        GetComponent<SpriteRenderer>().sprite = stages[i].sprite;
-                        break;
-                    }
+        if (tolerableHumidity.Contains((int)tile.Humidity)){
+            if (preferredHumidity.Contains((int)tile.Humidity)){
+                growth += growthRate * 2 * Time.deltaTime;
+                if (health < 100){
+                    health += Time.deltaTime * 2;
                 }
             }
+            else{
+                if (health < 100){
+                    health += Time.deltaTime;
+                }
+                growth += growthRate * Time.deltaTime;
+            }
+            if (growth >= stages[currentStage].growthNeeded){
+                currentStage++;
+            }
         }
+
+        else {
+            if (health > 0){
+                health -= Time.deltaTime;
+            }
+
+            if (health <= 0){
+                dead = true;
+            }
+        }
+
+        if (health >= 75){
+            GetComponent<SpriteRenderer>().sprite = stages[currentStage].healthySprite;
+        }
+        else if (health > 0){
+            GetComponent<SpriteRenderer>().sprite = stages[currentStage].sickSprite;
+        }
+        else{
+            GetComponent<SpriteRenderer>().sprite = stages[currentStage].deadSprite;
+        }
+
+        tile.Dry(waterConsumptionS * Time.deltaTime);
     }
 }

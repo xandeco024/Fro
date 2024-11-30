@@ -64,10 +64,7 @@ public class PlayerTools : MonoBehaviour
             {
                 case 1:
                     //hand tool
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        Debug.Log(tilemapManager.GetSelectedTile().Coordinate);
-                    }
+
                     break;
 
                 case 2:
@@ -189,7 +186,7 @@ public class PlayerTools : MonoBehaviour
                 (int)selectedTile.Temperature,
                 (int)selectedTile.Luminosity,
                 (int)selectedTile.LifeSupport,
-                (int)selectedTile.Wetness);
+                (int)selectedTile.Humidity);
             currentInfoPanel.transform.SetParent(GameObject.Find("HUD").transform);
         }
         else if (lastScannedTile == selectedTile && currentInfoPanel != null)
@@ -199,7 +196,7 @@ public class PlayerTools : MonoBehaviour
                 (int)selectedTile.Temperature,
                 (int)selectedTile.Luminosity,
                 (int)selectedTile.LifeSupport,
-                (int)selectedTile.Wetness);
+                (int)selectedTile.Humidity);
         }
         else if (selectedTile == null)
         {

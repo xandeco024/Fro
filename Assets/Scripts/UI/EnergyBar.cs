@@ -21,7 +21,6 @@ public class EnergyBar : MonoBehaviour
     {
         player = GameObject.FindFirstObjectByType<Player>();
 
-        energyPerFill = player.MaxBatteryWh / 5;
 
         text.text = (int)player.CurrentBatteryWh + "Wh / " + (int)player.MaxBatteryWh + "Wh";
         textIndex = 1;
@@ -30,15 +29,11 @@ public class EnergyBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        energyPerFill = player.MaxBatteryWh / 5;
         currentFillIndex = (int)(player.CurrentBatteryWh / energyPerFill);
-
         energyInCurrentFill = player.CurrentBatteryWh % energyPerFill;
-
-            fillTop[currentFillIndex].fillAmount = energyInCurrentFill / energyPerFill;
+        fillTop[currentFillIndex].fillAmount = energyInCurrentFill / energyPerFill;
         fillBottom[currentFillIndex].fillAmount = energyInCurrentFill / energyPerFill;
-
-        Debug.Log(energyInCurrentFill);
 
         swapTimer += Time.deltaTime;
 
