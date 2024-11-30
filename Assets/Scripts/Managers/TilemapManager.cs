@@ -6,7 +6,6 @@ public class TilemapManager : MonoBehaviour
 {
     private Tilemap tilemap;
     public Tilemap Tilemap { get => tilemap; }
-    private Player player;
     private Tile selectedTile;
     [SerializeField] private GameObject selectedTileObject;
     [SerializeField] private GameObject crackObject;
@@ -18,10 +17,9 @@ public class TilemapManager : MonoBehaviour
     [SerializeField] private List<TileData> tileData;
     private Camera mainCamera;
 
-    void Start()
+    void Awake()
     {
         tilemap = GetComponent<Tilemap>();
-        player = FindObjectOfType<Player>();
         mainCamera = Camera.main;
 
         // Inicializar dicionário de TileData
@@ -46,6 +44,11 @@ public class TilemapManager : MonoBehaviour
                 tiles[localPlace].Reset();
             }
         }
+    }
+
+    void Start()
+    {
+
     }
 
     void Update()

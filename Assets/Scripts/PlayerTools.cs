@@ -7,7 +7,6 @@ using UnityEngine;
 public class PlayerTools : MonoBehaviour
 {
     private Player player;
-    private InputActions inputActions;
     private TilemapManager tilemapManager;
     private Tile selectedTile;
 
@@ -18,13 +17,6 @@ public class PlayerTools : MonoBehaviour
     public int CurrentToolIndex { get { return currentToolIndex; } }
     private bool selectingTool;
     public bool SelectingTool { get { return selectingTool; } }
-
-
-
-    private bool rightClick;
-    private bool lastRightClick;
-    private bool leftClick;
-    private bool lastLeftClick;
 
 
 
@@ -39,6 +31,7 @@ public class PlayerTools : MonoBehaviour
     [Header("Scanner")]
     [SerializeField] private bool hasScannerTool;
     [SerializeField] private int scannerConsumptionWs;
+    [SerializeField] private float scannerRange;
     private Tile lastScannedTile;
     [SerializeField] private GameObject infoPanelPrefab;
     private InfoPanel currentInfoPanel;
@@ -52,27 +45,6 @@ public class PlayerTools : MonoBehaviour
     [SerializeField] private int wateringConsumptionWs;
 
 
-
-    void OnEnable()
-    {
-        if (inputActions == null)
-        {
-            inputActions = new InputActions();
-
-            inputActions.Player.RightClick.started += ctx => rightClick = true;
-            inputActions.Player.RightClick.canceled += ctx => rightClick = false;
-
-            inputActions.Player.LeftClick.started += ctx => leftClick = true;
-            inputActions.Player.LeftClick.canceled += ctx => leftClick = false;
-        }
-
-        inputActions.Enable();
-    }
-
-    void OnDisable()
-    {
-        inputActions.Disable();
-    }
 
     void Start()
     {
@@ -89,13 +61,14 @@ public class PlayerTools : MonoBehaviour
 
         if (CanUseTool())
         {
-
-            if (hasScannerTool) HandleScannerTool();
-
             switch (currentToolIndex)
             {
                 case 1:
                     //hand tool
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        Debug.Log(tilemapManager.GetSelectedTile().Coordinate);
+                    }
                     break;
 
                 case 2:
@@ -111,8 +84,37 @@ public class PlayerTools : MonoBehaviour
             }
         }
 
-        lastRightClick = rightClick;
-        lastLeftClick = leftClick;
+        else 
+
+        {
+            switch (currentToolIndex)
+            {
+                case 1:
+                    //hand tool
+                    break;
+
+                case 2:
+                    player.RemoveConsumptionWs("DestroyTool");
+                    break;
+
+                case 3:
+                    player.RemoveConsumptionWs("WateringTool");
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        if (hasScannerTool && selectedTile != null && Vector3.Distance(transform.position, selectedTile.Coordinate) <= scannerRange)
+        {
+            HandleScannerTool();
+        }
+
+        else 
+        {
+            DestroyinfoPanel();
+        }
     }
 
     private bool CanUseTool()
@@ -155,10 +157,13 @@ public class PlayerTools : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
+            player.AddConsumptionWs("DestroyTool", destroyConsumptionWs);
+
             selectedTile.Damage(destroyDamage * Time.deltaTime);
             if (selectedTile.CurrentHealth <= 0)
             {
                 tilemapManager.DestroyTile(selectedTile.Coordinate);
+                player.RemoveConsumptionWs("DestroyTool");
             }
         }
 
@@ -169,40 +174,49 @@ public class PlayerTools : MonoBehaviour
         }
     }
 
+    #region scanner
+
     public void HandleScannerTool()
     {
         if (lastScannedTile != selectedTile)
         {
-            if (currentInfoPanel != null)
-            {
-                Destroy(currentInfoPanel.gameObject);
-            }
+            DestroyinfoPanel();
 
             lastScannedTile = selectedTile;
             Vector2 playerPosition = Camera.main.WorldToScreenPoint(selectedTile.Coordinate);
             currentInfoPanel = Instantiate(infoPanelPrefab, playerPosition, Quaternion.identity).GetComponent<InfoPanel>();
-            currentInfoPanel.GetComponent<InfoPanel>().UpdatePanel(
+            currentInfoPanel.UpdatePanel(
                 selectedTile.Name,
-                selectedTile.Temperature,
-                selectedTile.Luminosity,
-                selectedTile.LifeSupport,
-                selectedTile.Wetness);
+                (int)selectedTile.Temperature,
+                (int)selectedTile.Luminosity,
+                (int)selectedTile.LifeSupport,
+                (int)selectedTile.Wetness);
             currentInfoPanel.transform.SetParent(GameObject.Find("HUD").transform);
         }
         else if (lastScannedTile == selectedTile && currentInfoPanel != null)
         {
             currentInfoPanel.UpdatePanel(
                 selectedTile.Name,
-                selectedTile.Temperature,
-                selectedTile.Luminosity,
-                selectedTile.LifeSupport,
-                selectedTile.Wetness);
+                (int)selectedTile.Temperature,
+                (int)selectedTile.Luminosity,
+                (int)selectedTile.LifeSupport,
+                (int)selectedTile.Wetness);
         }
-        else if (currentInfoPanel != null && selectedTile == null)
+        else if (selectedTile == null)
+        {
+            DestroyinfoPanel();
+        }
+    }
+
+    void DestroyinfoPanel()
+    {
+        if (currentInfoPanel != null)
         {
             Destroy(currentInfoPanel.gameObject);
         }
     }
+
+    #endregion
 
     private void HandleWateringTool()
     {

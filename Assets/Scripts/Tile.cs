@@ -6,19 +6,19 @@ public class Tile
     private string tileName;
     private float health;
     private float currentHealth;
-    private int wetness;
+    private float wetness;
     private int luminosity;
     private int lifeSupport;
-    private int temperature;
+    private float temperature;
 
     public Vector3Int Coordinate { get => coordinate; }
     public string Name { get => tileName; }
     public float Health { get => health; }
     public float CurrentHealth { get => currentHealth; }
-    public int Wetness { get => wetness; }
+    public float Wetness { get => wetness; }
     public int Luminosity { get => luminosity; }
     public int LifeSupport { get => lifeSupport; }
-    public int Temperature { get => temperature; }
+    public float Temperature { get => temperature; }
 
 
 
@@ -40,8 +40,13 @@ public class Tile
         currentHealth -= damage;
     }
 
-    public void Water(int amount)
+    public void Water(float amount)
     {
         wetness += amount;
+    }
+
+    public void Dry(float amount)
+    {
+        wetness -= amount;
     }
 }
