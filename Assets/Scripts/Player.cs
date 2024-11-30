@@ -9,6 +9,8 @@ public class Player : Electrical
     private Rigidbody2D rb;
     private Animator animator;
 
+    private Storage inventory;
+    public Storage Inventory { get { return inventory; } }
 
 
     [Header("Movement")]
@@ -41,11 +43,19 @@ public class Player : Electrical
 
 
 
+    void Awake()
+    {
+        inventory = new Storage();
+    }
+
     public override void Start()
     {
         base.Start();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        ItemWorld.SpawnItemWorld(new Vector3(transform.position.x + 2, transform.position.y, 0), new Item { itemType = Item.ItemType.smallMetalScrap, amount = 3 });
+        ItemWorld.SpawnItemWorld(new Vector3(transform.position.x - 2, transform.position.y, 0), new Item { itemType = Item.ItemType.smallPlasticScrap, amount = 5 });
     }
 
     public override void Update()

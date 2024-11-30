@@ -42,14 +42,21 @@ public class EnergyBar : MonoBehaviour
             swapTimer = 0;
             if (textIndex == 0)
             {
-                text.text = (int)player.CurrentBatteryWh + "Wh / " + (int)player.MaxBatteryWh + "Wh";
                 textIndex = 1;
             }
             else
             {
-                text.text = (int)player.CurrentConsumptionWs + "Ws";
                 textIndex = 0;
             }
+        }
+
+        if (textIndex == 0)
+        {
+            text.text = (int)player.CurrentConsumptionWs + "Ws";
+        }
+        else if (textIndex == 1)
+        {
+            text.text = (int)player.CurrentBatteryWh + "Wh / " + (int)player.MaxBatteryWh + "Wh";
         }
     }
 }

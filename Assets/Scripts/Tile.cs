@@ -24,7 +24,7 @@ public class Tile
 
     public Tile(Vector3Int coordinate, TileData data)
     {
-        TilemapManager tilemapManager = GameObject.FindObjectOfType<TilemapManager>();
+        TilemapManager tilemapManager = GameObject.FindFirstObjectByType<TilemapManager>();
 
         this.coordinate = coordinate;
         tileName = data.Name;
@@ -63,8 +63,6 @@ public class Tile
                 }
             }
         }
-
-        Debug.Log("AAAAAAA");
     }
 
     public void Reset()

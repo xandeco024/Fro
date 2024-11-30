@@ -56,7 +56,7 @@ public class Electrical : MonoBehaviour
             foreach (Collider2D collider in colliders)
             {
                 Electrical device = collider.GetComponent<Electrical>();
-                if (device != null)
+                if (device != null && device.canWirelessCharge && device != this && device.currentBatteryWh < device.maxBatteryWh)
                 {
                     devicesToWirelessCharge.Add(device);
                 }
@@ -66,16 +66,24 @@ public class Electrical : MonoBehaviour
             {
                 foreach (Electrical device in devicesToWirelessCharge)
                 {
-                    if (device.canWirelessRecharge)
-                    {
-                        if (currentBatteryWh > 0)
-                        {                            
-                            device.RechargeWs(wirelessChargeRateWs);
-                            //Debug.Log("devia ter reccaregado " + device.gameObject.name + " com " + wirelessChargeRateWs);
-                            AddConsumptionWs("WirelessCharge", wirelessChargeRateWs);
-                        }
+                    if (currentBatteryWh > 0 && device.CurrentBatteryWh < device.MaxBatteryWh)
+                    {                     
+                        float remainingWh = device.MaxBatteryWh - device.CurrentBatteryWh;
+                        float transfer = wirelessChargeRateWs;
+                        float availableEnergyWs = currentBatteryWh * 3600f;
+                        transfer = Mathf.Min(transfer, availableEnergyWs);
+                        transfer = Mathf.Min(transfer, remainingWh * 3600f);
+
+                        device.RechargeWs((int)transfer);
+
+                        AddConsumptionWs("WirelessCharge", (int)transfer);
                     }
                 }
+            }
+
+            else
+            {
+                RemoveConsumptionWs("WirelessCharge");
             }
         }
 
