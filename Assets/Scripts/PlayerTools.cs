@@ -73,8 +73,8 @@ public class PlayerTools : MonoBehaviour
         tilemapManager = FindFirstObjectByType<TilemapManager>();
         hotbar = FindFirstObjectByType<UIHotbar>();
 
-        waterTankLevel = waterTankCapacity / 2;
-        soilTankLevel = soilTankCapacity / 2;
+        waterTankLevel = waterTankCapacity;
+        soilTankLevel = soilTankCapacity;
     }
 
     void Update()
@@ -88,17 +88,20 @@ public class PlayerTools : MonoBehaviour
         switch (currentToolIndex)
         {
             case 1:
-                if (hotbar.SelectedItem != null)
+
+                Item item = hotbar.SelectedItem;
+
+                if (item != null)
                 {
                     holdingItem.color = new Color(1, 1, 1, 1);
                     holdingItem.sprite = hotbar.SelectedItem.GetUISprite();
 
-                    if (hotbar.SelectedItem.itemType == Item.ItemType.ficusSeed || hotbar.SelectedItem.itemType == Item.ItemType.monsteraDeliciosaSeed)
+                    if (IsASeed(item))
                     {
                         if (Input.GetMouseButtonDown(0) && CanUseTool() && selectedTile.Plowed && !selectedTile.Planted)
                         {
-                            selectedTile.Plant(hotbar.SelectedItem.GetPlantPrefab());
-                            player.Inventory.RemoveItem(hotbar.SelectedItem, 1);
+                            selectedTile.Plant(item.GetPlantPrefab());
+                            player.Inventory.RemoveItem(item, 1);
                         }
                     }
                 }
@@ -134,6 +137,11 @@ public class PlayerTools : MonoBehaviour
         {
             DestroyinfoPanel();
         }
+    }
+
+    private bool IsASeed(Item item)
+    {
+        return item.itemType == Item.ItemType.ficusSeed || item.itemType == Item.ItemType.monsteraDeliciosaSeed || item.itemType == Item.ItemType.clusiaSeed || item.itemType == Item.ItemType.cedarSeed || item.itemType == Item.ItemType.coconutSeed || item.itemType == Item.ItemType.jamboSeed || item.itemType == Item.ItemType.bromeliaSeed;
     }
 
     public bool CanUseTool()
@@ -274,7 +282,7 @@ public class PlayerTools : MonoBehaviour
             if (Input.GetMouseButton(0) && waterTankLevel > 0){
                 if (waterTankLevel > 0){
                     selectedTile.Water(1);
-                    waterTankLevel--;
+                    //waterTankLevel--;
                 }
                 else{
                     Debug.Log("Tank is empty!");
@@ -301,4 +309,15 @@ public class PlayerTools : MonoBehaviour
         }
     }
     
+    public void AddWater(int amount)
+    {
+        waterTankLevel += amount;
+        waterTankLevel = Mathf.Clamp(waterTankLevel, 0, waterTankCapacity);
+    }
+
+    public void AddSoil(int amount)
+    {
+        soilTankLevel += amount;
+        soilTankLevel = Mathf.Clamp(soilTankLevel, 0, soilTankCapacity);
+    }
 }

@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -7244381681542958189, guid: 7261111d186562d4099a092671d2b33e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   plantName: "Costela de Ad\xE3o"
   cientificName: Monstera Deliciosa
-  growthRate: 5
+  growthRate: 3
   preferredHumidity:
     min: 70
     max: 90
@@ -121,17 +121,21 @@ MonoBehaviour:
   tolerableLight:
     min: 0
     max: 0
-  waterConsumptionS: 1
+  waterConsumptionS: 0.1
   stages:
+  - healthySprite: {fileID: 0}
+    sickSprite: {fileID: 0}
+    deadSprite: {fileID: 0}
+    growthNeeded: 0
   - healthySprite: {fileID: -7244381681542958189, guid: 7261111d186562d4099a092671d2b33e, type: 3}
     sickSprite: {fileID: -1210963344092129959, guid: 7261111d186562d4099a092671d2b33e, type: 3}
-    deadSprite: {fileID: 0}
-    growthNeeded: 10
-  - healthySprite: {fileID: 4228409957143623736, guid: 7261111d186562d4099a092671d2b33e, type: 3}
-    sickSprite: {fileID: 1275738852, guid: 7261111d186562d4099a092671d2b33e, type: 3}
-    deadSprite: {fileID: 0}
-    growthNeeded: 100
-  - healthySprite: {fileID: 1488154830, guid: 7261111d186562d4099a092671d2b33e, type: 3}
-    sickSprite: {fileID: -291727014, guid: 7261111d186562d4099a092671d2b33e, type: 3}
-    deadSprite: {fileID: 0}
-    growthNeeded: 500
+    deadSprite: {fileID: 4228409957143623736, guid: 7261111d186562d4099a092671d2b33e, type: 3}
+    growthNeeded: 50
+  - healthySprite: {fileID: 1275738852, guid: 7261111d186562d4099a092671d2b33e, type: 3}
+    sickSprite: {fileID: 1488154830, guid: 7261111d186562d4099a092671d2b33e, type: 3}
+    deadSprite: {fileID: -291727014, guid: 7261111d186562d4099a092671d2b33e, type: 3}
+    growthNeeded: 400
+  - healthySprite: {fileID: 1610406786, guid: 7261111d186562d4099a092671d2b33e, type: 3}
+    sickSprite: {fileID: -670384289, guid: 7261111d186562d4099a092671d2b33e, type: 3}
+    deadSprite: {fileID: -1089095471, guid: 7261111d186562d4099a092671d2b33e, type: 3}
+    growthNeeded: 1200

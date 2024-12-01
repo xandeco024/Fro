@@ -40,6 +40,12 @@ public class Electrical : MonoBehaviour
     [SerializeField] protected float wirelessChargeDistance;
     [SerializeField] protected List<Electrical> devicesToWirelessCharge = new List<Electrical>();
 
+
+
+    //about its generation
+    [SerializeField] protected bool canGenerate;
+    [SerializeField] protected int generationRateWs;
+
     public virtual void Start()
     {
         currentBatteryWh = maxBatteryWh;
@@ -88,6 +94,11 @@ public class Electrical : MonoBehaviour
             }
         }
 
+        if (canGenerate)
+        {
+            RechargeWs(generationRateWs);
+        }
+
         HandleConsumption();
     }
 
@@ -125,6 +136,7 @@ public class Electrical : MonoBehaviour
     public virtual void ConsumeEnergyW(int amountW)
     {
         float currentBatteryWs = currentBatteryWh * 3600;
+        amountW *= timeScaleFactor;
 
         if (currentBatteryWs - amountW >= 0)
         {
@@ -136,7 +148,6 @@ public class Electrical : MonoBehaviour
         }
 
         currentBatteryWh = currentBatteryWs / 3600;
-        Debug.Log("Perdeu " + amountW + "W");
     }
 
     public virtual void AddConsumptionWs(string consumption ,int amountWs)

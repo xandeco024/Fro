@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -6418418492368109590, guid: 25054c6231ef4614d897441ff1f93fb8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   plantName: Figueira
   cientificName: Ficus carica
-  growthRate: 3
+  growthRate: 1
   preferredHumidity:
     min: 50
     max: 70
@@ -121,17 +121,21 @@ MonoBehaviour:
   tolerableLight:
     min: 0
     max: 0
-  waterConsumptionS: 1.5
+  waterConsumptionS: 0.25
   stages:
+  - healthySprite: {fileID: 0}
+    sickSprite: {fileID: 0}
+    deadSprite: {fileID: 0}
+    growthNeeded: 0
   - healthySprite: {fileID: -6418418492368109590, guid: 25054c6231ef4614d897441ff1f93fb8, type: 3}
     sickSprite: {fileID: -4205144046678806110, guid: 25054c6231ef4614d897441ff1f93fb8, type: 3}
     deadSprite: {fileID: 406177108318401515, guid: 25054c6231ef4614d897441ff1f93fb8, type: 3}
-    growthNeeded: 10
+    growthNeeded: 50
   - healthySprite: {fileID: 7749956364677831253, guid: 25054c6231ef4614d897441ff1f93fb8, type: 3}
     sickSprite: {fileID: 2336196655106932553, guid: 25054c6231ef4614d897441ff1f93fb8, type: 3}
     deadSprite: {fileID: 8013422009583508367, guid: 25054c6231ef4614d897441ff1f93fb8, type: 3}
-    growthNeeded: 200
+    growthNeeded: 500
   - healthySprite: {fileID: -1771952402515691473, guid: 25054c6231ef4614d897441ff1f93fb8, type: 3}
     sickSprite: {fileID: -4142734728584389728, guid: 25054c6231ef4614d897441ff1f93fb8, type: 3}
     deadSprite: {fileID: 913423616, guid: 25054c6231ef4614d897441ff1f93fb8, type: 3}
-    growthNeeded: 1000
+    growthNeeded: 2500

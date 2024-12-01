@@ -13,6 +13,16 @@ public class ItemAssets : MonoBehaviour
     public GameObject monsteraDeliciosaPlantPrefab;
     public Sprite ficusSeedSprite;
     public GameObject ficusPlantPrefab;
+    public Sprite clusiaSeedSprite;
+    public GameObject clusiaPlantPrefab;
+    public Sprite cedarSeedSprite;
+    public GameObject cedarPlantPrefab;
+    public Sprite coconutSeedSprite;
+    public GameObject coconutPlantPrefab;
+    public Sprite jamboSeedSprite;
+    public GameObject jamboPlantPrefab;
+    public Sprite bromeliaSeedSprite;
+    public GameObject bromeliaPlantPrefab;
 
     [Header("Items")]
     public Sprite soilSprite;

@@ -9,8 +9,13 @@ public class Storage
 
     public Storage()
     {
-        AddItem(new Item { itemType = Item.ItemType.ficusSeed, amount = 6 });
-        AddItem(new Item { itemType = Item.ItemType.monsteraDeliciosaSeed, amount = 6 });
+        AddItem(new Item { itemType = Item.ItemType.ficusSeed, amount = 1 });
+        AddItem(new Item { itemType = Item.ItemType.monsteraDeliciosaSeed, amount = 1 });
+        AddItem(new Item { itemType = Item.ItemType.clusiaSeed, amount = 1 });
+        AddItem(new Item { itemType = Item.ItemType.cedarSeed, amount = 1 });
+        AddItem(new Item { itemType = Item.ItemType.coconutSeed, amount = 1 });
+        AddItem(new Item { itemType = Item.ItemType.jamboSeed, amount = 1 });
+        AddItem(new Item { itemType = Item.ItemType.bromeliaSeed, amount = 1 });
     }
 
     public void SwapItems(int slotA, int slotB)
