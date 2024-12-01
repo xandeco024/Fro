@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class Electrical : MonoBehaviour
@@ -56,7 +57,7 @@ public class Electrical : MonoBehaviour
             foreach (Collider2D collider in colliders)
             {
                 Electrical device = collider.GetComponent<Electrical>();
-                if (device != null && device.canWirelessCharge && device != this && device.currentBatteryWh < device.maxBatteryWh)
+                if (device != null && device.canWirelessRecharge && device != this && device.currentBatteryWh < device.maxBatteryWh)
                 {
                     devicesToWirelessCharge.Add(device);
                 }
@@ -123,16 +124,19 @@ public class Electrical : MonoBehaviour
 
     public virtual void ConsumeEnergyW(int amountW)
     {
-        amountW = amountW / 3600 * timeScaleFactor;
+        float currentBatteryWs = currentBatteryWh * 3600;
 
-        if (currentBatteryWh - amountW >= 0)
+        if (currentBatteryWs - amountW >= 0)
         {
-            currentBatteryWh -= amountW;
+            currentBatteryWs -= amountW;
         }
         else
         {
-            currentBatteryWh = 0;
+            currentBatteryWs = 0;
         }
+
+        currentBatteryWh = currentBatteryWs / 3600;
+        Debug.Log("Perdeu " + amountW + "W");
     }
 
     public virtual void AddConsumptionWs(string consumption ,int amountWs)

@@ -17,17 +17,46 @@ public class Item
     public ItemType itemType;
     public int amount;
 
-    public Sprite GetSprite()
+    public GameObject GetPlantPrefab()
+    {
+        switch (itemType)
+        {
+            default:
+            case ItemType.seed: return ItemAssets.Instance.seedPlantPrefab;
+            case ItemType.soil:
+            case ItemType.smallEletronicScrap:
+            case ItemType.smallPlasticScrap:
+            case ItemType.smallMetalScrap:
+            case ItemType.smallGlassScrap:
+                return null;
+        }
+    }
+
+    public Sprite GetWorldSprite()
     {
         switch (itemType)
         {
             default:
             case ItemType.seed: return ItemAssets.Instance.seedSprite;
             case ItemType.soil: return ItemAssets.Instance.soilSprite;
-            case ItemType.smallEletronicScrap: return ItemAssets.Instance.eletronicScrapSprite[Random.Range(0, ItemAssets.Instance.eletronicScrapSprite.Length)];
-            case ItemType.smallPlasticScrap: return ItemAssets.Instance.plasticScrapSprite[Random.Range(0, ItemAssets.Instance.plasticScrapSprite.Length)];
-            case ItemType.smallMetalScrap: return ItemAssets.Instance.metalScrapSprite[Random.Range(0, ItemAssets.Instance.metalScrapSprite.Length)];
-            case ItemType.smallGlassScrap: return ItemAssets.Instance.glassScrapSprite[Random.Range(0, ItemAssets.Instance.glassScrapSprite.Length)];
+            case ItemType.smallEletronicScrap: return ItemAssets.Instance.eletronicScrapWorldSprites[Random.Range(0, ItemAssets.Instance.eletronicScrapWorldSprites.Length)];
+            case ItemType.smallPlasticScrap: return ItemAssets.Instance.plasticScrapWorldSprites[Random.Range(0, ItemAssets.Instance.plasticScrapWorldSprites.Length)];
+            case ItemType.smallMetalScrap: return ItemAssets.Instance.metalScrapWorldSprites[Random.Range(0, ItemAssets.Instance.metalScrapWorldSprites.Length)];
+            case ItemType.smallGlassScrap: return ItemAssets.Instance.glassScrapWorldSprites[Random.Range(0, ItemAssets.Instance.glassScrapWorldSprites.Length)];
+        }
+    }
+
+    public Sprite GetUISprite()
+    {
+        switch (itemType)
+        {
+            default:
+            case ItemType.seed: return ItemAssets.Instance.seedSprite;
+            case ItemType.soil: return ItemAssets.Instance.soilSprite;
+            case ItemType.smallEletronicScrap: return ItemAssets.Instance.eletronicScrapUISprite;
+            case ItemType.smallPlasticScrap: return ItemAssets.Instance.plasticScrapUISprite;
+            case ItemType.smallMetalScrap: return ItemAssets.Instance.metalScrapUISprite;
+            case ItemType.smallGlassScrap: return ItemAssets.Instance.glassScrapUISprite;
         }
     }
 

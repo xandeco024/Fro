@@ -8,13 +8,23 @@ public class ItemAssets : MonoBehaviour
     {
         Instance = this;
     }
-
+    [Header("Plants & Seeds")]
     public Sprite seedSprite;
-    public Sprite soilSprite;
-    public Sprite[] eletronicScrapSprite;
-    public Sprite[] plasticScrapSprite;
-    public Sprite[] metalScrapSprite;
-    public Sprite[] glassScrapSprite;
+    public GameObject seedPlantPrefab;
 
+    [Header("Items")]
+    public Sprite soilSprite;
+
+    [Header("Scraps")]
+    public Sprite eletronicScrapUISprite;
+    public Sprite[] eletronicScrapWorldSprites;
+    public Sprite plasticScrapUISprite;
+    public Sprite[] plasticScrapWorldSprites;
+    public Sprite metalScrapUISprite;
+    public Sprite[] metalScrapWorldSprites;
+    public Sprite glassScrapUISprite;
+    public Sprite[] glassScrapWorldSprites;
+
+    [Header("Item World")]
     public Transform pfItemWorld;
 }

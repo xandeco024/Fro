@@ -2,21 +2,21 @@ using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using System.Linq;
 
 public class UIInventory : MonoBehaviour
 {
     private Storage inventory;
+    public Storage Inventory { get => inventory; }
     private RectTransform container;
-    private RectTransform slotTemplate;
-    private List<RectTransform> slots;
-    [SerializeField] private float gap;
+    public RectTransform[] slots = new RectTransform[12];
     private bool active = false;
 
     void Start()
     {
         inventory = GameObject.FindFirstObjectByType<Player>().Inventory;
         container = transform.Find("Container").GetComponent<RectTransform>();
-        slotTemplate = container.Find("Slot Template").GetComponent<RectTransform>();
 
         inventory.OnItemListChanged += Inventory_OnItemListChanged;
         RefreshInventoryItems();
@@ -29,7 +29,6 @@ public class UIInventory : MonoBehaviour
             active = !active;
             container.gameObject.SetActive(active);
             if (active) RefreshInventoryItems();
-            // if (!active) ClearSlots();
         }
     }
 
@@ -38,42 +37,68 @@ public class UIInventory : MonoBehaviour
         RefreshInventoryItems();
     }
 
-    private void RefreshInventoryItems()
+    public void SwapSlots(RectTransform slotA, RectTransform slotB)
     {
-        foreach (Transform child in container)
-        {
-            if (child == slotTemplate) continue;
-            Destroy(child.gameObject);
-        }
+        int Aindex = 0, Bindex = 0;
 
-        int x = 0;
-        int y = 0;
-        float slotSize = slotTemplate.sizeDelta.x;
-
-        foreach(Item item in inventory.GetItems())
+        for (int i = 0; i < slots.Length; i++)
         {
-            RectTransform slot = Instantiate(slotTemplate, container).GetComponent<RectTransform>();
-            slot.gameObject.SetActive(true);
-            slot.anchoredPosition = new Vector2(x * slotSize + gap, -y * slotSize);
-            slot.transform.Find("Amount").GetComponent<TMPro.TextMeshProUGUI>().text = item.amount.ToString();
-            slot.GetComponent<Image>().sprite = item.GetSprite();
-            // slots.Add(slot);
-            x++;
-            if (x > 2)
+            if (slots[i] == slotA)
             {
-                x = 0;
-                y++;
+                Aindex = i;
+            }
+            else if (slots[i] == slotB)
+            {
+                Bindex = i;
             }
         }
+
+        inventory.SwapItems(Aindex, Bindex);
     }
 
-    private void ClearSlots()
+    private void RefreshInventoryItems()
     {
-        foreach (RectTransform slot in slots)
-        {
-            Destroy(slot.gameObject);
-        }
+        Item[] items = inventory.GetItems();
 
-        slots.Clear();
+        for(int i = 0; i < slots.Length; i++)
+        {
+            slots[i].GetComponent<ButtonUI>().onLeftClick.RemoveAllListeners();
+            slots[i].GetComponent<ButtonUI>().onRightClick.RemoveAllListeners();
+
+            if (items[i] != null)
+            {
+                int index = i;
+
+                slots[i].transform.Find("Amount").GetComponent<TMPro.TextMeshProUGUI>().text = items[i].amount.ToString();
+                slots[i].GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                slots[i].GetComponent<Image>().sprite = items[i].GetUISprite();
+
+                slots[i].GetComponent<ButtonUI>().onLeftClick.AddListener(() => {
+                    Debug.Log("Left Clicked");
+                });
+                slots[i].GetComponent<ButtonUI>().onRightClick.AddListener(() => {
+                    Debug.Log("Right Clicked");
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        //drop all
+                        Item duplicate = new Item { itemType = items[index].itemType, amount = items[index].amount };
+                        inventory.RemoveItem(items[index], items[index].amount);
+                        ItemWorld.DropItem(GameObject.FindFirstObjectByType<Player>().transform.position, duplicate);
+                    }
+                    else 
+                    {
+                        //drop one
+                        Item duplicate = new Item { itemType = items[index].itemType, amount = 1 };
+                        inventory.RemoveItem(items[index], 1);
+                        ItemWorld.DropItem(GameObject.FindFirstObjectByType<Player>().transform.position, duplicate);
+                    }
+                });
+            }
+            else
+            {
+                slots[i].GetComponent<Image>().color = new Color(1, 1, 1, 0);
+                slots[i].transform.Find("Amount").GetComponent<TMPro.TextMeshProUGUI>().text = "";
+            }
+        }
     }
 }

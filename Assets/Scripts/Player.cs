@@ -8,7 +8,6 @@ public class Player : Electrical
     [Header("Components")]
     private Rigidbody2D rb;
     private Animator animator;
-
     private Storage inventory;
     public Storage Inventory { get { return inventory; } }
 
@@ -149,7 +148,7 @@ public class Player : Electrical
 
     private void Jump()
     {
-        if (isGrounded && currentBatteryWh > jumpConsumptionW / 3600 * timeScaleFactor)
+        if (isGrounded && currentBatteryWh > 0)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse);
             ConsumeEnergyW(jumpConsumptionW);

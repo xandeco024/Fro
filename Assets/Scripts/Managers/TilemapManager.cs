@@ -4,6 +4,8 @@ using UnityEngine.Tilemaps;
 
 public class TilemapManager : MonoBehaviour
 {
+    private Player player;
+    private PlayerTools playerTools;
     private Tilemap tilemap;
     public Tilemap Tilemap { get => tilemap; }
     private Tile selectedTile;
@@ -16,6 +18,8 @@ public class TilemapManager : MonoBehaviour
     public Dictionary<Vector3Int, Tile> tiles = new Dictionary<Vector3Int, Tile>();
     [SerializeField] private List<TileData> tileData;
     private Camera mainCamera;
+    [SerializeField] private GameObject plowPrefab;
+    public GameObject PlowPrefab { get => plowPrefab; }
 
     void Awake()
     {
@@ -40,7 +44,7 @@ public class TilemapManager : MonoBehaviour
             TileBase tile = tilemap.GetTile(localPlace);
             if (tileDataDict.TryGetValue(tile, out TileData data))
             {
-                tiles[localPlace] = new Tile(localPlace, data);
+                tiles[localPlace] = new Tile(localPlace, data, this);
                 tiles[localPlace].Reset();
             }
         }
@@ -48,7 +52,8 @@ public class TilemapManager : MonoBehaviour
 
     void Start()
     {
-
+        player = FindFirstObjectByType<Player>();
+        playerTools = player.GetComponent<PlayerTools>();
     }
 
     void Update()
@@ -59,7 +64,7 @@ public class TilemapManager : MonoBehaviour
 
         selectedTile = GetTile(coordinate);
 
-        if (selectedTile != null)
+        if (selectedTile != null && playerTools.CanUseTool())
         {
             selectedTileObject.SetActive(true);
             selectedTileObject.transform.position = tilemap.GetCellCenterWorld(coordinate); 

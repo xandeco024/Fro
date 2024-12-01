@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Tile
 {
+    private TilemapManager tilemapManager;
+
     private Vector3Int coordinate;
     private string tileName;
     private float health;
@@ -10,6 +12,11 @@ public class Tile
     private int luminosity;
     private int lifeSupport;
     private float temperature;
+    private bool planted;
+    private GameObject plowObject;
+    private bool plowed;
+    private float plowExpiration = 120;
+    private float plowTimer;
 
     public Vector3Int Coordinate { get => coordinate; }
     public string Name { get => tileName; }
@@ -19,23 +26,18 @@ public class Tile
     public int Luminosity { get => luminosity; }
     public int LifeSupport { get => lifeSupport; }
     public float Temperature { get => temperature; }
+    public bool Plowed { get => plowed; }
+    public bool Planted { get => planted; }
 
     private Tile[] neighbourTiles;
 
-    public Tile(Vector3Int coordinate, TileData data)
+    public Tile(Vector3Int coordinate, TileData data, TilemapManager tilemapManager)
     {
-        TilemapManager tilemapManager = GameObject.FindFirstObjectByType<TilemapManager>();
-
+        this.tilemapManager = tilemapManager;
         this.coordinate = coordinate;
         tileName = data.Name;
         health = data.Health;
         currentHealth = health;
-        neighbourTiles = new Tile[4] {
-            tilemapManager.GetTile(coordinate + Vector3Int.up),
-            tilemapManager.GetTile(coordinate + Vector3Int.down),
-            tilemapManager.GetTile(coordinate + Vector3Int.left),
-            tilemapManager.GetTile(coordinate + Vector3Int.right)
-        };
     }
 
     public void Update()
@@ -52,17 +54,16 @@ public class Tile
             humidity = 100;
         }
 
-        if (humidity > 10)
-        {
-            for (int i = 0; i < neighbourTiles.Length; i++)
+        if (plowed && !planted){
+            plowTimer += Time.deltaTime;
+            if (plowTimer >= plowExpiration)
             {
-                if (neighbourTiles[i] != null)
-                {
-                    neighbourTiles[i].Water(0.25f);
-                    Dry(0.25f);
-                }
+                GameObject.Destroy(plowObject);
+                plowed = false;
+                plowTimer = 0;
             }
         }
+    
     }
 
     public void Reset()
@@ -107,5 +108,23 @@ public class Tile
     public void Cool(float amount)
     {
         temperature -= amount;
+    }
+
+    public void Plow(){
+        Vector3 plowObjectPosition = new Vector3(coordinate.x + 0.5f, coordinate.y + 0.75f, 0);
+        if (plowObject == null)
+        {
+            plowObject = GameObject.Instantiate(tilemapManager.PlowPrefab, plowObjectPosition, Quaternion.identity);
+        }
+        else
+        {
+            plowObject.transform.position = plowObjectPosition;
+        }
+        plowed = true;
+    }
+
+    public void Plant(GameObject plantPrefab){
+        planted = true;
+        GameObject.Instantiate(plantPrefab, new Vector3(coordinate.x + 0.5f, coordinate.y + 1f, 0), Quaternion.identity);
     }
 }
