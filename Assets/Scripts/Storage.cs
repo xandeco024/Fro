@@ -9,8 +9,8 @@ public class Storage
 
     public Storage()
     {
-        AddItem(new Item { itemType = Item.ItemType.ficusSeed, amount = 1 });
-        AddItem(new Item { itemType = Item.ItemType.monsteraDeliciosaSeed, amount = 2 });
+        AddItem(new Item { itemType = Item.ItemType.ficusSeed, amount = 6 });
+        AddItem(new Item { itemType = Item.ItemType.monsteraDeliciosaSeed, amount = 6 });
     }
 
     public void SwapItems(int slotA, int slotB)

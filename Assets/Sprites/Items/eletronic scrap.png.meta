@@ -147,6 +147,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: eletronic scrap_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4754b7b0bac8ddb448914b1d19102c63
+      internalID: -1617930166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: eletronic scrap_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b58bfca01aa88748956ae29f84d4b53
+      internalID: -871414950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -162,6 +206,8 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       eletronic scrap_0: -616760457198920552
+      eletronic scrap_1: -1617930166
+      eletronic scrap_2: -871414950
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

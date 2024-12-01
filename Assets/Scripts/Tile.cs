@@ -1,3 +1,4 @@
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class Tile
@@ -125,6 +126,13 @@ public class Tile
 
     public void Plant(GameObject plantPrefab){
         planted = true;
+
+        bool flip = Random.Range(0, 2) == 0;
+
         GameObject.Instantiate(plantPrefab, new Vector3(coordinate.x + 0.5f, coordinate.y + 1f, 0), Quaternion.identity);
+        if (flip)
+        {
+            plantPrefab.transform.localScale = new Vector3(-1, 1, 1);
+        }
     }
 }

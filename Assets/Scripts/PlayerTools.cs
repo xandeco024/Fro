@@ -28,6 +28,10 @@ public class PlayerTools : MonoBehaviour
     [SerializeField] private float destroyDamage;
     [SerializeField] private int destroyConsumptionWs;
     [SerializeField] private int buildConsumptionWs;
+    [SerializeField] private int soilTankCapacity;
+    [SerializeField] private int soilTankLevel;
+    public int SoilTankLevel { get { return soilTankLevel; } }
+    public int SoilTankCapacity { get { return soilTankCapacity; } }
 
 
 
@@ -44,8 +48,10 @@ public class PlayerTools : MonoBehaviour
     [Header("Watering")]
     [SerializeField] private bool hasWateringTool;
     [SerializeField] private float wateringToolRange;
-    [SerializeField] private int tankCapacity;
-    [SerializeField] private int tankLevel;
+    [SerializeField] private int waterTankCapacity;
+    public int WaterTankCapacity { get { return waterTankCapacity; } }
+    [SerializeField] private int waterTankLevel;
+    public int WaterTankLevel { get { return waterTankLevel; } }
     [SerializeField] private int wateringConsumptionWs;
 
 
@@ -65,8 +71,10 @@ public class PlayerTools : MonoBehaviour
     {
         player = GetComponent<Player>();
         tilemapManager = FindFirstObjectByType<TilemapManager>();
-        tankLevel = tankCapacity;
         hotbar = FindFirstObjectByType<UIHotbar>();
+
+        waterTankLevel = waterTankCapacity / 2;
+        soilTankLevel = soilTankCapacity / 2;
     }
 
     void Update()
@@ -87,7 +95,7 @@ public class PlayerTools : MonoBehaviour
 
                     if (hotbar.SelectedItem.itemType == Item.ItemType.ficusSeed || hotbar.SelectedItem.itemType == Item.ItemType.monsteraDeliciosaSeed)
                     {
-                        if (Input.GetMouseButtonDown(0) && CanUseTool() && selectedTile.Plowed)
+                        if (Input.GetMouseButtonDown(0) && CanUseTool() && selectedTile.Plowed && !selectedTile.Planted)
                         {
                             selectedTile.Plant(hotbar.SelectedItem.GetPlantPrefab());
                             player.Inventory.RemoveItem(hotbar.SelectedItem, 1);
@@ -263,10 +271,10 @@ public class PlayerTools : MonoBehaviour
                 player.RemoveConsumptionWs("WateringTool");
             }
 
-            if (Input.GetMouseButton(0) && tankLevel > 0){
-                if (tankLevel > 0){
+            if (Input.GetMouseButton(0) && waterTankLevel > 0){
+                if (waterTankLevel > 0){
                     selectedTile.Water(1);
-                    tankLevel--;
+                    waterTankLevel--;
                 }
                 else{
                     Debug.Log("Tank is empty!");
