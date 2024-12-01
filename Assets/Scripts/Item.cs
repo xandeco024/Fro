@@ -6,7 +6,8 @@ public class Item
 {
     public enum ItemType
     {
-        seed,
+        monsteraDeliciosaSeed,
+        ficusSeed,
         soil,
         smallEletronicScrap,
         smallPlasticScrap,
@@ -22,7 +23,8 @@ public class Item
         switch (itemType)
         {
             default:
-            case ItemType.seed: return ItemAssets.Instance.seedPlantPrefab;
+            case ItemType.monsteraDeliciosaSeed: return ItemAssets.Instance.monsteraDeliciosaPlantPrefab;
+            case ItemType.ficusSeed: return ItemAssets.Instance.ficusPlantPrefab;
             case ItemType.soil:
             case ItemType.smallEletronicScrap:
             case ItemType.smallPlasticScrap:
@@ -37,7 +39,8 @@ public class Item
         switch (itemType)
         {
             default:
-            case ItemType.seed: return ItemAssets.Instance.seedSprite;
+            case ItemType.monsteraDeliciosaSeed: return ItemAssets.Instance.monsteraDeliciosaSeedSprite;
+            case ItemType.ficusSeed: return ItemAssets.Instance.ficusSeedSprite;
             case ItemType.soil: return ItemAssets.Instance.soilSprite;
             case ItemType.smallEletronicScrap: return ItemAssets.Instance.eletronicScrapWorldSprites[Random.Range(0, ItemAssets.Instance.eletronicScrapWorldSprites.Length)];
             case ItemType.smallPlasticScrap: return ItemAssets.Instance.plasticScrapWorldSprites[Random.Range(0, ItemAssets.Instance.plasticScrapWorldSprites.Length)];
@@ -51,7 +54,8 @@ public class Item
         switch (itemType)
         {
             default:
-            case ItemType.seed: return ItemAssets.Instance.seedSprite;
+            case ItemType.monsteraDeliciosaSeed: return ItemAssets.Instance.monsteraDeliciosaSeedSprite;
+            case ItemType.ficusSeed: return ItemAssets.Instance.ficusSeedSprite;
             case ItemType.soil: return ItemAssets.Instance.soilSprite;
             case ItemType.smallEletronicScrap: return ItemAssets.Instance.eletronicScrapUISprite;
             case ItemType.smallPlasticScrap: return ItemAssets.Instance.plasticScrapUISprite;
@@ -65,7 +69,8 @@ public class Item
         switch (itemType)
         {
             default:
-            case ItemType.seed:
+            case ItemType.monsteraDeliciosaSeed:
+            case ItemType.ficusSeed:
             case ItemType.soil:
             case ItemType.smallEletronicScrap:
             case ItemType.smallPlasticScrap:

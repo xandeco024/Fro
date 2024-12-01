@@ -85,7 +85,7 @@ public class PlayerTools : MonoBehaviour
                     holdingItem.color = new Color(1, 1, 1, 1);
                     holdingItem.sprite = hotbar.SelectedItem.GetUISprite();
 
-                    if (hotbar.SelectedItem.itemType == Item.ItemType.seed)
+                    if (hotbar.SelectedItem.itemType == Item.ItemType.ficusSeed || hotbar.SelectedItem.itemType == Item.ItemType.monsteraDeliciosaSeed)
                     {
                         if (Input.GetMouseButtonDown(0) && CanUseTool() && selectedTile.Plowed)
                         {

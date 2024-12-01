@@ -7291,8 +7291,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f8d39834dc2184e85712d5bf17a6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seedSprite: {fileID: 21300000, guid: 4d3bb5663f87c5d4f82b307337ca1304, type: 3}
-  seedPlantPrefab: {fileID: 5747471617546926373, guid: 72bbc446ae403934ca5605c84a3c8064, type: 3}
+  monsteraDeliciosaSeedSprite: {fileID: 21300000, guid: 4d3bb5663f87c5d4f82b307337ca1304, type: 3}
+  monsteraDeliciosaPlantPrefab: {fileID: 5747471617546926373, guid: 72bbc446ae403934ca5605c84a3c8064, type: 3}
+  ficusSeedSprite: {fileID: 21300000, guid: 4d3bb5663f87c5d4f82b307337ca1304, type: 3}
+  ficusPlantPrefab: {fileID: 6718197240586300378, guid: 9afb71fcf5c646c48a85f4abd7fe71be, type: 3}
   soilSprite: {fileID: 21300000, guid: a23ae0ef662c72249873764bd8f3d45f, type: 3}
   eletronicScrapUISprite: {fileID: -616760457198920552, guid: e63af8311435b5046a443a1dd52a524e, type: 3}
   eletronicScrapWorldSprites:

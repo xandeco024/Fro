@@ -9,8 +9,10 @@ public class ItemAssets : MonoBehaviour
         Instance = this;
     }
     [Header("Plants & Seeds")]
-    public Sprite seedSprite;
-    public GameObject seedPlantPrefab;
+    public Sprite monsteraDeliciosaSeedSprite;
+    public GameObject monsteraDeliciosaPlantPrefab;
+    public Sprite ficusSeedSprite;
+    public GameObject ficusPlantPrefab;
 
     [Header("Items")]
     public Sprite soilSprite;
